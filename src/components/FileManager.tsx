@@ -50,10 +50,13 @@ export function FileManager() {
         if (a.type !== 'directory' && b.type === 'directory') return 1;
         return a.name.localeCompare(b.name);
       });
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Data fetching pattern
       setItems(sorted);
     } else {
+       
       setItems([]);
     }
+     
     setSelectedItem(null);
   }, [currentPath, listDirectory]);
 
