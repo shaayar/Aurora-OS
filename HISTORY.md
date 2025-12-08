@@ -1,5 +1,16 @@
 # Version History
 
+## v0.6.2-patch3
+- **Environment**: Added Vite chunking for better performance.
+- **Desktop**: Added dragging constrains to prevent Windows going off-screen.
+- **Filesystem**: Improved special folders consistency (.Trash and .Config).
+- **Finder**: Fixed visibility of hidden files. Terminal will show hidden files.
+- **Dock**: Fixed active Window dot indicator to respect the accent color.
+- **Terminal**: Fixed path display in prompt.
+- **Finder**: Added full-path breadcrumbs to navigate through directories, with drag-to-move functionality.
+- **Finder**: Fixed breadcrumbs to show correct path if opened from Terminal.
+- **Environment**: Added Content Security Policy (CSP) to prevent XSS attacks, and other various web-standard security measures.
+
 ## v0.6.2-patch2
 - **Unified Desktop Aesthetics**: Removed unselected "pill" backgrounds from Desktop icons and aligned text truncation with Finder (single-line).
 - **Window Focus UX**: Enabled "Click to Focus" on window content while restricting drag operations to the title bar.
