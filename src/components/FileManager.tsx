@@ -26,6 +26,7 @@ import { useFileSystem, FileNode } from './FileSystemContext';
 import { useAppStorage } from '../hooks/useAppStorage';
 import { useElementSize } from '../hooks/useElementSize';
 import { FileIcon } from './ui/FileIcon';
+import { cn } from './ui/utils';
 
 interface BreadcrumbPillProps {
   name: string;
@@ -356,8 +357,9 @@ export function FileManager({ initialPath }: { initialPath?: string }) {
   }, [homePath, navigateTo, sidebarDropProps, getNodeAtPath]);
 
   const toolbar = (
-    <div className="flex items-center justify-between w-full">
-      <div className="flex items-center gap-2">
+    <div className="flex items-center w-full gap-2 px-0">
+      {/* Left Controls */}
+      <div className="flex items-center gap-2 shrink-0">
         <button
           onClick={goBack}
           disabled={historyIndex === 0}
@@ -393,10 +395,11 @@ export function FileManager({ initialPath }: { initialPath?: string }) {
         >
           <Trash2 className="w-4 h-4" />
         </button>
+      </div>
 
-
-        {/* Breadcrumbs */}
-        <div className="ml-3 flex items-center gap-1.5 overflow-x-auto no-scrollbar mask-linear-fade">
+      {/* Breadcrumbs - Flexible Middle */}
+      <div className="flex-1 flex items-center gap-1.5 overflow-hidden mx-2 mask-linear-fade">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar w-full">
           {currentPath === '/' ? (
             <BreadcrumbPill
               name="/"
@@ -410,8 +413,11 @@ export function FileManager({ initialPath }: { initialPath?: string }) {
               const segments = currentPath.split('/').filter(Boolean);
 
               // Responsive Logic
-              const CONTROLS_WIDTH = 140; // Width of buttons + padding (Tuned to prevent premature hiding)
+              const CONTROLS_WIDTH = 260; // Safe width for left/right controls + padding
               const availableWidth = Math.max(0, width - CONTROLS_WIDTH);
+
+              // If extremely narrow, hide breadcrumbs immediately
+              if (availableWidth < 60) return null;
 
               // Calculate width of each segment (approximate)
               // 8px per char + 24px padding + 6px gap
@@ -425,17 +431,14 @@ export function FileManager({ initialPath }: { initialPath?: string }) {
                 if (currentWidth + segmentWidths[i] <= availableWidth) {
                   currentWidth += segmentWidths[i];
                   visibleSegmentsCount++;
-                } else if (visibleSegmentsCount === 0) {
-                  // Ensure at least the last one is shown if possible, or force it
-                  visibleSegmentsCount = 1;
-                  break;
                 } else {
+                  // No force show - if it doesn't fit, it doesn't show
                   break;
                 }
               }
 
-              // Always show at least one segment if path is not root
-              visibleSegmentsCount = Math.max(1, visibleSegmentsCount);
+              // If we can't fit even one segment properly, show nothing (or maybe just root if that fits, but root is handled separately above)
+              if (visibleSegmentsCount === 0) return null;
 
               const startIdx = segments.length - visibleSegmentsCount;
               const visibleSegments = segments.slice(startIdx);
@@ -467,19 +470,24 @@ export function FileManager({ initialPath }: { initialPath?: string }) {
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      {/* Right Controls */}
+      <div className="flex items-center gap-2 shrink-0">
         <div className="flex gap-1">
           <button
             onClick={() => setAppState(s => ({ ...s, viewMode: 'grid' }))}
-            className={`p-1.5 rounded-md transition-colors ${appState.viewMode === 'grid' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
-              }`}
+            className={cn(
+              "p-1.5 rounded-md transition-colors",
+              appState.viewMode === 'grid' ? "bg-white/10 text-white" : "text-white/50 hover:bg-white/5"
+            )}
           >
             <Grid3x3 className="w-4 h-4" />
           </button>
           <button
             onClick={() => setAppState(s => ({ ...s, viewMode: 'list' }))}
-            className={`p-1.5 rounded-md transition-colors ${appState.viewMode === 'list' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
-              }`}
+            className={cn(
+              "p-1.5 rounded-md transition-colors",
+              appState.viewMode === 'list' ? "bg-white/10 text-white" : "text-white/50 hover:bg-white/5"
+            )}
           >
             <List className="w-4 h-4" />
           </button>
@@ -615,5 +623,5 @@ export function FileManager({ initialPath }: { initialPath?: string }) {
     </div>
   );
 
-  return <AppTemplate sidebar={fileManagerSidebar} toolbar={toolbar} content={content} />;
+  return <AppTemplate sidebar={fileManagerSidebar} toolbar={toolbar} content={content} minContentWidth={600} />;
 }

@@ -2,8 +2,8 @@ import { ReactNode } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { useAppContext } from '../AppContext';
 import { useThemeColors } from '../../hooks/useThemeColors';
-import { cn } from '../ui/utils';
 import { useElementSize } from '../../hooks/useElementSize';
+import { cn } from '../ui/utils';
 
 interface AppTemplateProps {
   sidebar?: {
@@ -23,13 +23,15 @@ interface AppTemplateProps {
     }[];
   };
   toolbar?: ReactNode;
-  content: ReactNode;
+  content: ReactNode | ((props: { width: number, contentWidth: number, isSidebarCompact: boolean }) => ReactNode);
   hasSidebar?: boolean;
   className?: string;
   contentClassName?: string;
   toolbarClassName?: string;
   activeItem?: string;
   onItemClick?: (id: string) => void;
+  sidebarCollapseBreakpoint?: number;
+  minContentWidth?: number;
 }
 
 export function AppTemplate({
@@ -41,14 +43,28 @@ export function AppTemplate({
   contentClassName,
   toolbarClassName,
   activeItem,
-  onItemClick
+  onItemClick,
+  sidebarCollapseBreakpoint,
+  minContentWidth
 }: AppTemplateProps) {
   const { accentColor } = useAppContext();
   const { windowBackground, sidebarBackground, titleBarBackground, blurStyle } = useThemeColors();
   const [containerRef, { width }] = useElementSize();
 
+  // Calculate breakpoint: either redundant usage of sidebarCollapseBreakpoint or derived from minContentWidth
+  // Default to 500 if neither is provided.
+  // Sidebar width is w-64 (256px) when expanded.
+  const SIDEBAR_WIDTH = 256;
+  const effectiveBreakpoint = sidebarCollapseBreakpoint ?? (minContentWidth ? minContentWidth + SIDEBAR_WIDTH : 500);
+
   // Explicit breakpoint for collapsing sidebar
-  const isCompact = width < 500;
+  const isCompact = width < effectiveBreakpoint;
+
+  // Calculate actual content width available
+  const sidebarWidth = hasSidebar && sidebar
+    ? (isCompact ? 64 : 256)
+    : 0;
+  const contentWidth = width - sidebarWidth;
 
   return (
     <div
@@ -130,7 +146,7 @@ export function AppTemplate({
 
         {/* Content */}
         <div className={cn("flex-1 flex flex-col min-h-0", contentClassName)}>
-          {content}
+          {typeof content === 'function' ? content({ width, contentWidth, isSidebarCompact: isCompact }) : content}
         </div>
       </div>
     </div >

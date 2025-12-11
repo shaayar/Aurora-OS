@@ -1,7 +1,8 @@
-import { ChevronLeft, ChevronRight, RotateCw, Home, Star, Lock, X } from 'lucide-react';
 import { useState } from 'react';
+import { ChevronLeft, ChevronRight, RotateCw, Home, Star, Lock, X } from 'lucide-react';
 import { AppTemplate } from './AppTemplate';
 import { useAppStorage } from '../../hooks/useAppStorage';
+import { cn } from '../ui/utils';
 
 const mockTabs = [
   { id: 1, title: 'Welcome to Browser', url: 'browser://welcome', active: true },
@@ -31,8 +32,10 @@ export function Browser() {
       {tabs.map((tab) => (
         <div
           key={tab.id}
-          className={`h-8 px-3 rounded-md flex items-center gap-2 min-w-0 max-w-xs transition-colors ${tab.active ? 'bg-white/10' : 'hover:bg-white/5'
-            }`}
+          className={cn(
+            "h-8 px-3 rounded-md flex items-center gap-2 min-w-0 max-w-xs transition-colors",
+            tab.active ? "bg-white/10" : "hover:bg-white/5"
+          )}
         >
           <span className="text-white/80 text-xs truncate flex-1">{tab.title}</span>
           <button className="text-white/40 hover:text-white/80 transition-colors">

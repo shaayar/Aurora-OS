@@ -55,11 +55,11 @@ npm test
 
 ## Release Notes
 
-## v0.6.2-patch4
-- **Terminal**: Improved ZSH-like experience with autocomplete, command history, pipe support, wildcard support, and more.
-- **Finder**: Improved item selecting/deselecting and added the Trash functionality.
-- **Dock**: Improved app icon behavior and added the Trash functionality.
-- **App bar**: Removed the search icon as it is not planned to be implemented in the near future.
+## v0.6.2-patch5
+- **Messages Redesign**: Completely revamped the Messages app with a sleek, borderless list view, adaptive layout (Finder-style), and colored chat bubbles.
+- **Auto-scroll**: Implemented smart auto-scroll for Messages that targets only the chat container, preventing app-wide layout shifts.
+- **Code Standardization**: Refactored core apps (`Music`, `Photos`, `Browser`, `Finder`) and UI components (`Window`, `Dock`, `MenuBar`) to use consistent `cn` utility for styling and standardized imports.
+- **Responsiveness**: Fixed overflow and cropping issues in Messages and Music apps, ensuring perfect scaling down to compact mobile sizes.
 
 [View full version history](HISTORY.md)
 

@@ -1,5 +1,11 @@
 # Version History
 
+## v0.6.2-patch5
+- **Messages Redesign**: Completely revamped the Messages app with a sleek, borderless list view, adaptive layout (Finder-style), and colored chat bubbles.
+- **Auto-scroll**: Implemented smart auto-scroll for Messages that targets only the chat container, preventing app-wide layout shifts.
+- **Code Standardization**: Refactored core apps (`Music`, `Photos`, `Browser`, `Finder`) and UI components (`Window`, `Dock`, `MenuBar`) to use consistent `cn` utility for styling and standardized imports.
+- **Responsiveness**: Fixed overflow and cropping issues in Messages and Music apps, ensuring perfect scaling down to compact mobile sizes.
+
 ## v0.6.2-patch4
 - **Terminal**: Improved ZSH-like experience with autocomplete, command history, pipe support, wildcard support, and more.
 - **Finder**: Improved item selecting/deselecting and added the Trash functionality.
@@ -65,9 +71,8 @@
 - **Applet Optimizations**: Notification Center and Desktop now respect performance settings.
 
 ## v0.5.0
-- Renamed to Aurora OS.js.
+- **Renamed to Aurora OS.js**.
 - Implemented Radix UI Checkbox for settings.
 - Fixed visual inconsistencies in Switch component.
 - Improved window management and dock behavior.
 - Refactored multiple apps for consistency.
-

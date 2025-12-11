@@ -1,12 +1,12 @@
-import { Apple, Wifi, Battery, Volume2, Bell, } from 'lucide-react';
 import { useState, useEffect, memo } from 'react';
+import { Apple, Wifi, Battery, Volume2, Bell, } from 'lucide-react';
+import { useThemeColors } from '../hooks/useThemeColors';
+import { cn } from './ui/utils';
 
 interface MenuBarProps {
   onNotificationsClick: () => void;
   focusedApp?: string | null;
 }
-
-import { useThemeColors } from '../hooks/useThemeColors';
 
 // App-specific menu configurations
 const appMenus: Record<string, { name: string; menus: string[] }> = {
@@ -68,7 +68,7 @@ function MenuBarComponent({ onNotificationsClick, focusedApp }: MenuBarProps) {
 
   return (
     <div
-      className="absolute top-0 left-0 right-0 h-7 border-b border-white/10 flex items-center justify-between px-4 z-[9999]"
+      className={cn("absolute top-0 left-0 right-0 h-7 border-b border-white/10 flex items-center justify-between px-4 z-[9999]")}
       style={{ background: menuBarBackground, ...blurStyle }}
     >
       {/* Left side */}

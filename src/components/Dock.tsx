@@ -1,10 +1,11 @@
-import { FolderOpen, Settings, Mail, Calendar, Image, Music, Video, Terminal, Globe, MessageSquare, Trash, Trash2 } from 'lucide-react';
-import { motion } from 'motion/react';
 import { useState, useEffect, useMemo, memo } from 'react';
+import { motion } from 'motion/react';
+import { FolderOpen, Settings, Mail, Calendar, Image, Music, Video, Terminal, Globe, MessageSquare, Trash, Trash2 } from 'lucide-react';
 import type { WindowState } from '../App';
 import { useThemeColors } from '../hooks/useThemeColors';
 import { useAppContext } from './AppContext';
 import { useFileSystem } from './FileSystemContext';
+import { cn } from './ui/utils';
 
 interface DockProps {
   onOpenApp: (appType: string, data?: any) => void;
@@ -131,7 +132,10 @@ function DockComponent({ onOpenApp, onRestoreWindow, onFocusWindow, windows }: D
   return (
     <div className="absolute left-4 top-1/2 -translate-y-1/2 z-[9998]">
       <motion.div
-        className={`rounded-2xl p-2 border border-white/20 ${!disableShadows ? 'shadow-2xl' : ''}`}
+        className={cn(
+          "rounded-2xl p-2 border border-white/20",
+          !disableShadows && "shadow-2xl"
+        )}
         style={{ background: dockBackground, ...blurStyle }}
         initial={{ x: -100, opacity: 0 }}
         animate={{
@@ -161,8 +165,11 @@ function DockComponent({ onOpenApp, onRestoreWindow, onFocusWindow, windows }: D
               <motion.button
                 key={app.id}
                 aria-label={app.label}
-                className={`relative w-12 h-12 rounded-xl ${bgClass} flex items-center justify-center text-white 
-                  ${!disableShadows ? 'shadow-lg hover:shadow-xl' : ''} transition-all`}
+                className={cn(
+                  "relative w-12 h-12 rounded-xl flex items-center justify-center text-white transition-all",
+                  bgClass,
+                  !disableShadows && "shadow-lg hover:shadow-xl"
+                )}
                 style={style}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
@@ -218,9 +225,11 @@ function DockComponent({ onOpenApp, onRestoreWindow, onFocusWindow, windows }: D
           {/* Trash Icon */}
           <motion.button
             aria-label="Trash"
-            className={`relative w-12 h-12 rounded-xl flex items-center justify-center text-white 
-                   ${!disableShadows ? 'shadow-lg hover:shadow-xl' : ''} transition-all border border-white/5
-                   ${disableGradients ? '' : 'bg-gradient-to-br from-gray-700 to-gray-900'}`}
+            className={cn(
+              "relative w-12 h-12 rounded-xl flex items-center justify-center text-white transition-all border border-white/5",
+              !disableShadows && "shadow-lg hover:shadow-xl",
+              !disableGradients && "bg-gradient-to-br from-gray-700 to-gray-900"
+            )}
             style={disableGradients ? { backgroundColor: '#374151' } : {}}
             onMouseEnter={() => setHoveredIndex(dockApps.length)}
             onMouseLeave={() => setHoveredIndex(null)}

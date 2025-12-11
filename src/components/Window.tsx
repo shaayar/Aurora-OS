@@ -1,7 +1,10 @@
-import { Maximize2 } from 'lucide-react';
 import { memo } from 'react';
+import { Maximize2 } from 'lucide-react';
 import { Rnd } from 'react-rnd';
 import type { WindowState } from '../App';
+import { useAppContext } from './AppContext';
+import { useThemeColors } from '../hooks/useThemeColors';
+import { cn } from './ui/utils';
 
 interface WindowProps {
   window: WindowState;
@@ -13,9 +16,6 @@ interface WindowProps {
   isFocused: boolean;
   bounds?: string;
 }
-
-import { useThemeColors } from '../hooks/useThemeColors';
-import { useAppContext } from './AppContext';
 
 function WindowComponent({
   window,
@@ -85,12 +85,14 @@ function WindowComponent({
         transition: window.isMaximized || window.isMinimized ? 'all 0.3s cubic-bezier(0.32, 0.72, 0, 1)' : 'none',
         // Start minimized styles
         opacity: window.isMinimized ? 0 : 1,
-        transform: window.isMinimized ? 'scale(0.2)' : undefined, // Rnd might overwrite transform, be careful
+        // transform: window.isMinimized ? 'scale(0.2)' : undefined, // Rnd might overwrite transform, be careful
         pointerEvents: window.isMinimized ? 'none' : 'auto',
       }}
-      className={`absolute rounded-xl overflow-hidden border border-white/20 
-        ${!disableShadows ? 'shadow-2xl' : ''} 
-        ${!isFocused && !window.isMinimized ? 'brightness-75 saturate-50' : ''}`}
+      className={cn(
+        "absolute rounded-xl overflow-hidden border border-white/20",
+        !disableShadows && "shadow-2xl",
+        (!isFocused && !window.isMinimized) && "brightness-75 saturate-50"
+      )}
     >
       <div
         className="w-full h-full flex flex-col overflow-hidden"

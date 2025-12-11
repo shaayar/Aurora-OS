@@ -1,7 +1,8 @@
+import { Heart, Folder, Clock, MapPin, User, Image, Grid3x3, List } from 'lucide-react';
 import { AppTemplate } from './AppTemplate';
 import { ResponsiveGrid } from '../ui/ResponsiveGrid';
-import { Heart, Folder, Clock, MapPin, User, Image, Grid3x3, List } from 'lucide-react';
 import { useAppStorage } from '../../hooks/useAppStorage';
+import { cn } from '../ui/utils';
 
 const photosSidebar = {
   sections: [
@@ -42,10 +43,22 @@ export function Photos() {
     <div className="flex items-center justify-between w-full">
       <h2 className="text-white/90">All Photos</h2>
       <div className="flex items-center gap-2">
-        <button className="p-1.5 hover:bg-white/10 rounded transition-colors">
-          <Grid3x3 className="w-4 h-4 text-white/70" />
+        <button
+          onClick={() => setAppState(s => ({ ...s, viewMode: 'grid' }))}
+          className={cn(
+            "p-1.5 rounded transition-colors",
+            appState.viewMode === 'grid' ? "bg-white/10 text-white" : "hover:bg-white/10 text-white/70"
+          )}
+        >
+          <Grid3x3 className="w-4 h-4" />
         </button>
-        <button className="p-1.5 hover:bg-white/10 rounded transition-colors">
+        <button
+          onClick={() => setAppState(s => ({ ...s, viewMode: 'list' }))}
+          className={cn(
+            "p-1.5 rounded transition-colors",
+            appState.viewMode === 'list' ? "bg-white/10 text-white" : "hover:bg-white/10 text-white/70"
+          )}
+        >
           <List className="w-4 h-4 text-white/70" />
         </button>
       </div>
@@ -73,6 +86,7 @@ export function Photos() {
       activeItem={appState.activeCategory}
       onItemClick={(id) => setAppState(s => ({ ...s, activeCategory: id }))}
       contentClassName="overflow-y-auto"
+      minContentWidth={500}
     />
   );
 }
