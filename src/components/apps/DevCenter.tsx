@@ -39,6 +39,7 @@ const devSidebar = {
 };
 
 export function DevCenter() {
+    const { fileSystem, resetFileSystem } = useFileSystem();
     const [activeTab, setActiveTab] = useState('dashboard');
 
     const renderContent = () => {
@@ -167,7 +168,6 @@ export function DevCenter() {
                 );
             case 'filesystem':
                 // eslint-disable-next-line no-case-declarations
-                const { fileSystem, resetFileSystem } = useFileSystem();
                 return (
                     <div className="p-6 h-full flex flex-col">
                         <div className="flex items-center justify-between mb-6">
