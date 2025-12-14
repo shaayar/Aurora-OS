@@ -1,4 +1,4 @@
-# Aurora OS.js [![Version](https://img.shields.io/badge/Version-v0.7.2-blue)](https://github.com/mental-os/Aurora-OS.js) [![GitHub Pages](https://github.com/mental-os/Aurora-OS.js/actions/workflows/deploy.yml/badge.svg)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/deploy.yml) [![Dependabot](https://github.com/mental-os/Aurora-OS.js/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/dependabot/dependabot-updates) [![Build](https://github.com/mental-os/Aurora-OS.js/actions/workflows/ci.yml/badge.svg)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/ci.yml)
+# Aurora OS.js [![Version](https://img.shields.io/badge/Version-v0.7.2_patch-blue)](https://github.com/mental-os/Aurora-OS.js) [![GitHub Pages](https://github.com/mental-os/Aurora-OS.js/actions/workflows/deploy.yml/badge.svg)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/deploy.yml) [![Dependabot](https://github.com/mental-os/Aurora-OS.js/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/dependabot/dependabot-updates) [![Build](https://github.com/mental-os/Aurora-OS.js/actions/workflows/ci.yml/badge.svg)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/ci.yml)
 
 A modern, web-based desktop operating system interface built with React, Tailwind CSS, and Radix UI.
 
@@ -56,17 +56,17 @@ npm test
 
 ## Release Notes
 
-## v0.7.2-patch
+### v0.7.2-patch
 - **True Lock Screen**: Overlay architecture keeps apps running while locked. Unique "Switch Account" flow prevents accidental data loss.
 - **Session Persistence**: Windows and desktop icons are now saved and restored per-user.
 - **Security**: Strict differentiation between "Locking" (suspend) and "Logging Out" (terminate).
 
 [View full version history](HISTORY.md)
 
-## License
+# License & Others
 
-Not yet available
+- **Licensed as**: [AGPL-3.0e](LICENSE)
+- **AI Disclosure**: This project, "Aurora OS," is human-written, with AI tools assisting in documentation, GitHub integrations, bug testing, and roadmap tracking.
 
-## AI disclosure
-
-This project, "Aurora OS," is human-written, with AI tools assisting in documentation, GitHub integrations, bug testing, and roadmap tracking.
+# Community
+Soon
