@@ -1,6 +1,6 @@
 # Aurora OS.js [![Version](https://img.shields.io/badge/Version-v0.7.5-blue)](https://github.com/mental-os/Aurora-OS.js) [![GitHub Pages](https://github.com/mental-os/Aurora-OS.js/actions/workflows/deploy.yml/badge.svg)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/deploy.yml) [![Dependabot](https://github.com/mental-os/Aurora-OS.js/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/dependabot/dependabot-updates) [![Build](https://github.com/mental-os/Aurora-OS.js/actions/workflows/ci.yml/badge.svg)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/ci.yml)
 
-A modern, web-based desktop operating system interface built with React, Tailwind CSS, and Radix UI.
+A modern, web-based desktop operating system interface built with React, Tailwind CSS v4, and Radix UI (shadcn).
 
 ## Features
 
