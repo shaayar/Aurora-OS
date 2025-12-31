@@ -90,17 +90,21 @@ Or use the [GitHub Pages](https://mental-os.github.io/Aurora-OS.js) (LIVE DEMO)
 
 ### [View full version history](HISTORY.md)
 
-# License & Others
+## 📝 License & Others
 
-- **Licensed as**: [AGPL-3.0e](LICENSE)
-- **Open-source code**: [OPEN-SOURCE.md](OPEN-SOURCE.md)
-- **AI Disclosure**: This project, "Aurora OS," is human-written, with AI tools assisting in documentation, GitHub integrations, bug testing, and roadmap tracking. As soon as this project is ready for release, all the AI tools will be removed and the generated content (audio, images, etc.) will be human-created.
-
-# Community
+### Community
  - Discord (soon)
  - [mental.os() Universe](https://instagram.com/mental.os)
 
- # Other links
+### Other links
  - [GitHub](https://github.com/mental-os/Aurora-OS.js)
  - [GitHub Pages](https://mental-os.github.io/Aurora-OS.js) (LIVE DEMO)
- - [GitBook](https://mental-os.gitbook.io/aurora-os.js)
+ - [GitBook](https://mental-os.gitbook.io/aurora-os.js) (soon)
+
+### License
+- **Licensed as**: [AGPL-3.0e](LICENSE)
+- **Open-source code**: [OPEN-SOURCE.md](OPEN-SOURCE.md)
+- **Contributing**: (soon)
+
+### AI Disclosure
+This project, "Aurora OS," is human-written, with AI tools assisting in documentation, GitHub integrations, bug testing, and roadmap tracking. As soon as this project is ready for release, all the AI tools will be removed and the generated content (audio, images, etc.) will be human-created.
