@@ -1,5 +1,5 @@
 import { AppTemplate } from './AppTemplate';
-import { Inbox, Trash2, Archive, Star, Search, Reply, Forward } from 'lucide-react';
+import { Inbox, Trash2, Archive, Star, Search, Reply, Forward, Paperclip, Download } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { useAppContext } from '../AppContext';
 import { useSessionStorage } from '@/hooks/useSessionStorage.ts';
@@ -10,6 +10,16 @@ import { GlassButton } from '../ui/GlassButton';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useI18n } from '@/i18n';
+import { useFileSystem } from '../FileSystemContext';
+import { notify } from '@/services/notifications';
+
+export interface EmailAttachment {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  content: string;
+}
 
 export interface Email {
   id: string;
@@ -22,6 +32,7 @@ export interface Email {
   starred: boolean;
   archived: boolean;
   deleted: boolean;
+  attachments?: EmailAttachment[];
 }
 
 
@@ -50,6 +61,22 @@ Sarah`,
     starred: true,
     archived: false,
     deleted: false,
+    attachments: [
+      {
+        id: 'att-1-1',
+        name: 'Q4_Project_Timeline.txt',
+        size: 245600,
+        type: 'application/text',
+        content: 'Q4 Project Timeline\n\nPhase 1: Infrastructure Setup (Completed)\nPhase 2: Development (In Progress - 75%)\nPhase 3: Testing & Deployment (Scheduled)\n\nDetailed timeline and milestones attached.',
+      },
+      {
+        id: 'att-1-2',
+        name: 'Budget_Report.txt',
+        size: 128400,
+        type: 'application/text',
+        content: 'Budget Report Q4\n\nTotal Budget: $500,000\nSpent: $375,000 (75%)\nRemaining: $125,000\n\nBreakdown by department included.',
+      },
+    ],
   },
   {
     id: '2',
@@ -136,11 +163,21 @@ Happy reading! 📚`,
     starred: false,
     archived: false,
     deleted: false,
+    attachments: [
+      {
+        id: 'att-4-1',
+        name: 'Tech_Weekly_January.text',
+        size: 1024000,
+        type: 'application/text',
+        content: 'Tech Weekly Digest - January Edition\n\nFull newsletter with articles, interviews, and technology trends.',
+      },
+    ],
   },
 ];
 
 export function Mail({ owner }: { owner?: string }) {
   const { t } = useI18n();
+  const { createFile, homePath } = useFileSystem();
   const [activeMailbox, setActiveMailbox] = useSessionStorage('mail-active-mailbox', 'inbox', owner);
   const [storedEmails, setStoredEmails] = useSessionStorage<Email[]>('mail-emails', mockEmails, owner);
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(storedEmails[0]?.id || null);
@@ -270,6 +307,31 @@ export function Mail({ owner }: { owner?: string }) {
     return date.toLocaleDateString();
   };
 
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  const handleDownloadAttachment = (attachment: EmailAttachment) => {
+    const downloadsPath = `${homePath}/Downloads`;
+    const success = createFile(downloadsPath, attachment.name, attachment.content);
+
+    if (success) {
+      notify.system(
+        'success',
+        t('mail.attachments.downloaded'),
+        t('mail.attachments.downloadedTo', { name: attachment.name, folder: 'Downloads' })
+      );
+    } else {
+      notify.system(
+        'error',
+        t('mail.attachments.downloadFailed'),
+        t('mail.attachments.downloadFailedMessage', { name: attachment.name })
+      );
+    }
+  };
+
   // Responsive container measurement
   const [containerRef, { width }] = useElementSize();
   const showSidebar = width >= 450;
@@ -345,13 +407,18 @@ export function Mail({ owner }: { owner?: string }) {
                         </span>
                         <span className="text-xs text-white/40 shrink-0">{formatTime(email.timestamp)}</span>
                       </div>
-                      <div
-                        className={cn(
-                          'text-sm truncate',
-                          email.read ? 'text-white/50' : 'text-white/80 font-medium'
+                      <div className="flex items-center gap-1.5">
+                        <div
+                          className={cn(
+                            'text-sm truncate flex-1',
+                            email.read ? 'text-white/50' : 'text-white/80 font-medium'
+                          )}
+                        >
+                          {email.subject}
+                        </div>
+                        {email.attachments && email.attachments.length > 0 && (
+                          <Paperclip className="w-3.5 h-3.5 text-white/40 shrink-0" />
                         )}
-                      >
-                        {email.subject}
                       </div>
                       <div className="text-xs text-white/40 truncate">
                         {email.body.replace(/<[^>]*>/g, '').substring(0, 60)}...
@@ -442,6 +509,41 @@ export function Mail({ owner }: { owner?: string }) {
                 >
                   {selectedEmail.body}
                 </ReactMarkdown>
+
+                {/* Attachments */}
+                {selectedEmail.attachments && selectedEmail.attachments.length > 0 && (
+                  <div className="mt-8 pt-6 border-t border-white/10">
+                    <div className="flex items-center gap-2 mb-4 text-white/70">
+                      <Paperclip className="w-4 h-4" />
+                      <span className="text-sm font-medium">
+                        {selectedEmail.attachments.length === 1
+                          ? t('mail.attachments.count', { count: selectedEmail.attachments.length })
+                          : t('mail.attachments.count_plural', { count: selectedEmail.attachments.length })}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-1 gap-2">
+                      {selectedEmail.attachments.map((attachment) => (
+                        <button
+                          key={attachment.id}
+                          onClick={() => handleDownloadAttachment(attachment)}
+                          className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-left group"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium text-white/90 truncate">
+                              {attachment.name}
+                            </div>
+                            <div className="text-xs text-white/50">
+                              {formatFileSize(attachment.size)}
+                            </div>
+                          </div>
+                          <div className="shrink-0 text-white/40 group-hover:text-white/70 transition-colors">
+                            <Download className="w-4 h-4" />
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </>
           ) : (

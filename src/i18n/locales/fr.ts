@@ -636,6 +636,16 @@ export const fr: TranslationDict = {
       yesterday: 'Hier',
       daysAgo: 'il y a {{days}} j',
     },
+    attachments: {
+      title: 'Pièces jointes',
+      count: '{{count}} pièce jointe',
+      count_plural: '{{count}} pièces jointes',
+      download: 'Télécharger',
+      downloaded: 'Téléchargé',
+      downloadedTo: '{{name}} téléchargé dans {{folder}}',
+      downloadFailed: 'Échec du téléchargement',
+      downloadFailedMessage: 'Échec du téléchargement de {{name}}',
+    },
   },
   notepad: {
     untitled: 'Sans titre',

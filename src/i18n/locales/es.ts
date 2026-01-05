@@ -634,6 +634,16 @@ export const es: TranslationDict = {
       yesterday: 'Ayer',
       daysAgo: 'hace {{days}} d',
     },
+    attachments: {
+      title: 'Archivos adjuntos',
+      count: '{{count}} archivo adjunto',
+      count_plural: '{{count}} archivos adjuntos',
+      download: 'Descargar',
+      downloaded: 'Descargado',
+      downloadedTo: '{{name}} descargado en {{folder}}',
+      downloadFailed: 'Error al descargar',
+      downloadFailedMessage: 'No se pudo descargar {{name}}',
+    },
   },
   notepad: {
     untitled: 'Sin título',
