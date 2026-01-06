@@ -17,6 +17,7 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
     const { t } = useI18n();
     const [selected, setSelected] = useState(canContinue ? 0 : 1);
     const [showSettings, setShowSettings] = useState(false);
+    const [showExitConfirm, setShowExitConfirm] = useState(false);
 
     // Keyboard navigation could be added here for true "game" feel
 
@@ -52,7 +53,7 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
             label: t('game.mainMenu.exit.label'),
             icon: Power,
             disabled: false,
-            action: () => window.close(), // Attempt to close tab
+            action: () => setShowExitConfirm(true), // Changed to show confirmation
             desc: t('game.mainMenu.exit.desc')
         }
     ];
@@ -115,6 +116,51 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
             {/* Settings Modal */}
             {showSettings && (
                 <SettingsModal onClose={() => setShowSettings(false)} />
+            )}
+
+            {/* Exit Confirmation Modal */}
+            {showExitConfirm && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+                    <motion.div
+                        initial={{ scale: 0.95, opacity: 0, y: 10 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        className="bg-zinc-900/90 border border-red-500/30 p-6 max-w-sm w-full rounded-2xl shadow-[0_0_30px_rgba(239,68,68,0.2)] relative text-center"
+                    >
+                        <div className="flex flex-col items-center gap-4">
+                            <div className="p-4 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 shadow-inner">
+                                <Power className="w-8 h-8" />
+                            </div>
+                            
+                            <div className="space-y-2">
+                                <h3 className="text-xl font-bold text-white tracking-wide">System Shutdown</h3>
+                                <p className="text-sm text-white/50">
+                                    Are you sure you want to shut down the system? Unsaved progress may be lost.
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3 w-full mt-4">
+                                <button
+                                    onClick={() => {
+                                        feedback.click();
+                                        setShowExitConfirm(false);
+                                    }}
+                                    className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium transition-colors text-sm"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        feedback.click();
+                                        window.close();
+                                    }}
+                                    className="px-4 py-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-200 hover:text-white font-medium transition-all shadow-[0_0_15px_rgba(239,68,68,0.2)] hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] text-sm"
+                                >
+                                    Shutdown
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
             )}
         </GameScreenLayout>
     );
