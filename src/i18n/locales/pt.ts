@@ -21,6 +21,12 @@ export const pt: TranslationDict = {
       exit: {
         label: 'Desligar',
         desc: 'Encerrar sessão',
+        confirm: {
+          title: 'Desligamento do Sistema',
+          message: 'Tem certeza que deseja desligar o sistema? Progresso não salvo pode ser perdido.',
+          cancel: 'Cancelar',
+          confirm: 'Desligar',
+        },
       },
     },
     bios: {
@@ -46,21 +52,6 @@ export const pt: TranslationDict = {
       originalDistribution: 'Distribuição original',
       temperedDistribution: 'Distribuição temperada',
     },
-  },
-  apps: {
-    finder: 'Arquivos',
-    systemSettings: 'Ajustes do Sistema',
-    photos: 'Fotos',
-    music: 'Música',
-    messages: 'Mensagens',
-    browser: 'Navegador',
-    terminal: 'Terminal',
-    trash: 'Lixeira',
-    devCenter: 'Centro Dev',
-    notepad: 'Bloco de Notas',
-    calendar: 'Calendário',
-    appStore: 'Loja de Apps',
-    mail: 'E-mail',
   },
   appDescriptions: {
     finder: 'Gerenciador de arquivos',
@@ -104,52 +95,6 @@ export const pt: TranslationDict = {
     title: 'Paleta de comandos',
     description: 'Buscar um comando para executar...',
   },
-  onboarding: {
-    steps: {
-      language: {
-        title: 'Bem-vindo ao Aurora',
-        description: 'Escolha seu idioma para começar',
-      },
-      account: {
-        title: 'Criar conta',
-        description: 'Configure a conta principal de administrador',
-      },
-      theme: {
-        title: 'Personalizar',
-        description: 'Deixe com a sua cara',
-      },
-      finishing: {
-        title: 'Configurando...',
-        description: 'Aplicando configurações',
-      },
-    },
-    account: {
-      fullName: 'Nome completo',
-      fullNamePlaceholder: 'Exemplo: João Silva',
-      username: 'Nome de usuário',
-      password: 'Senha',
-      passwordHint: 'Dica de senha (opcional)',
-      passwordHintPlaceholder: 'Exemplo: Nome do seu primeiro pet',
-    },
-    theme: {
-      mode: 'Modo do tema',
-      accentColor: 'Cor de destaque',
-      darkMode: 'Escuro (Neutro)',
-      lightMode: 'Claro',
-      comingSoon: 'Em breve',
-    },
-    finishing: {
-      title: 'Tudo pronto!',
-      subtitle: 'O Aurora OS está pronto. Redirecionando para a tela de login...',
-    },
-    buttons: {
-      next: 'Próximo',
-      continue: 'Continuar',
-      finish: 'Concluir',
-      back: 'Voltar',
-      startUsing: 'Começar a usar o Aurora',
-    },
-  },
 
   login: {
     softReset: 'Reinicialização suave',
@@ -184,52 +129,99 @@ export const pt: TranslationDict = {
     menus: {
       file: 'Arquivo',
       shell: 'Shell',
+      edit: 'Editar',
+      format: 'Formatar',
+      song: 'Música',
       view: 'Visualizar',
+      go: 'Ir',
+      controls: 'Controles',
       window: 'Janela',
       help: 'Ajuda',
-      devCenter: 'DevCenter',
       store: 'Loja',
-      format: 'Formatar',
+      history: 'Histórico',
+      bookmarks: 'Favoritos',
+      mailbox: 'Caixa de Correio',
+      message: 'Mensagem',
+      devCenter: 'Centro DEV',
+      tools: 'Ferramentas',
+      image: 'Imagem',
+      conversations: 'Conversas',
     },
-    system: {
-      about: 'Sobre',
-      systemSettings: 'Ajustes do Sistema',
-      appStore: 'Loja de Apps',
-      logout: 'Sair',
-      softReset: 'Reinicialização suave',
-      hardReset: 'Reinicialização completa',
-    },
-    file: {
-      newWindow: 'Nova janela',
-      closeWindow: 'Fechar janela',
-    },
-    shell: {
-      newTab: 'Nova aba',
-      clearScrollback: 'Limpar histórico',
-    },
-    view: {
-      zoomIn: 'Aumentar zoom',
-      zoomOut: 'Diminuir zoom',
-      resetZoom: 'Redefinir zoom',
-      fullScreen: 'Tela cheia',
-    },
-    window: {
+    items: {
+      newWindow: 'Nova Janela',
+      newFolder: 'Nova Pasta',
+      closeWindow: 'Fechar Janela',
+      undo: 'Desfazer',
+      redo: 'Refazer',
+      cut: 'Recortar',
+      copy: 'Copiar',
+      paste: 'Colar',
+      selectAll: 'Selecionar Tudo',
+      reload: 'Recarregar',
+      toggleFullscreen: 'Alternar Tela Cheia',
       minimize: 'Minimizar',
-      maximize: 'Maximizar',
-      close: 'Fechar',
+      bringAllToFront: 'Trazer Tudo para Frente',
+      back: 'Voltar',
+      forward: 'Avançar',
+      enclosingFolder: 'Pasta Superior',
     },
     help: {
-      docs: 'Documentação',
-      keyboardShortcuts: 'Atalhos do teclado',
+      appHelp: 'Ajuda do {{appName}}',
+    },
+    default: {
+      featureNotImplemented: 'Recurso não implementado',
+    },
+    system: {
+      aboutThisComputer: 'Sobre Este Computador...',
+      systemSettings: 'Ajustes do Sistema...',
+      appStore: 'Loja de Apps...',
+      lockScreen: 'Bloquear Tela',
+      switchUser: 'Trocar Usuário',
+      user: 'Usuário',
+      logOutAs: 'Sair como: {{username}}',
+      viewSystemInfo: 'Ver informações do sistema',
+      viewSystemSettings: 'Ver ajustes do sistema',
+      returnToLoginWhile: 'Retornar à tela de login enquanto',
+      returnToUserSelectionWhile: 'Retornar à seleção de usuário enquanto',
+      keepingSession: 'mantém a sessão',
+      clearingSession: 'limpa a sessão',
+      panic: 'PÂNICO',
+      hardReset: 'Reinicialização Completa',
+      warning: 'Aviso',
+      panicWarningBody:
+        'Isso redefinirá o {{productName}} para os padrões de fábrica. Útil se algo der muito errado.',
+    },
+    app: {
+      aboutApp: 'Sobre {{appName}}',
+      settings: 'Ajustes...',
+      quitApp: 'Sair do {{appName}}',
     },
   },
   notifications: {
     title: 'Notificações',
-    empty: {
-      title: 'Sem notificações',
-      description: 'Quando algo acontecer, as notificações aparecem aqui.',
-    },
     clearAll: 'Limpar tudo',
+    time: {
+      minutesAgo: 'há {{minutes}}m',
+      hoursAgo: 'há {{hours}}h',
+    },
+    items: {
+      newEmail: {
+        title: 'Novo E-mail',
+        message: 'Você tem {{count}} mensagens não lidas',
+      },
+      meetingReminder: {
+        title: 'Lembrete de Reunião',
+        message: 'Sincronização de equipe em {{minutes}} minutos',
+      },
+      newMessage: {
+        title: 'Nova Mensagem',
+        message: '{{sender}}: Ei, você está disponível?',
+      },
+      downloadComplete: {
+        title: 'Download Concluído',
+        message: '{{filename}} está pronto',
+      },
+    },
   },
   appStore: {
     menu: {
@@ -243,40 +235,57 @@ export const pt: TranslationDict = {
       utilities: 'Utilitários',
       development: 'Desenvolvimento',
       system: 'Sistema',
-
-      // Kept for backwards-compat with older PT strings
-      entertainment: 'Entretenimento',
     },
     searchPlaceholder: 'Buscar apps...',
     empty: {
       title: 'Nenhum app encontrado',
       description: 'Tente ajustar sua busca ou categoria para encontrar o que você procura.',
     },
-    systemApp: 'App do sistema',
     size: 'Tamanho',
     sizeUnknown: 'Desconhecido',
+    systemApp: 'App do sistema',
     install: 'Instalar',
     uninstall: 'Desinstalar',
     installed: 'Instalado',
-
-    // Kept PT-only strings used elsewhere
-    title: 'Loja de Apps',
-    open: 'Abrir',
   },
   browser: {
-    addressBarPlaceholder: 'Digite um URL ou termo de busca',
-    go: 'Ir',
-    back: 'Voltar',
-    forward: 'Avançar',
-    reload: 'Recarregar',
-    newTab: 'Nova aba',
-    home: 'Início',
+    menu: {
+      newTab: 'Nova Aba',
+      closeTab: 'Fechar Aba',
+      stop: 'Parar',
+      zoomIn: 'Aumentar Zoom',
+      zoomOut: 'Diminuir Zoom',
+      showFullHistory: 'Mostrar Histórico Completo',
+    },
+    tabs: {
+      welcome: 'Bem-vindo ao Navegador',
+      newTab: 'Nova Aba',
+    },
+    welcome: {
+      searchPlaceholder: 'Buscar sites ou digitar endereço...',
+      favorites: 'Favoritos',
+      recentActivity: 'Atividade Recente',
+    },
+    searchPlaceholder: 'Buscar ou digitar endereço...',
+    error: {
+      pageNotFound: 'Página Não Encontrada',
+      pageNotFoundDesc: 'O site {{url}} não pôde ser encontrado.',
+      goHome: 'Ir para o Início',
+    },
   },
   music: {
     sidebar: {
-      title: 'Música',
-      recent: 'Recentes',
       library: 'Biblioteca',
+      songs: 'Músicas',
+      favorites: 'Favoritas',
+      recentlyPlayed: 'Tocadas Recentemente',
+    },
+    titles: {
+      songs: 'Músicas',
+      recentlyPlayed: 'Tocadas Recentemente',
+    },
+    actions: {
+      playAll: 'Tocar Tudo',
     },
     empty: {
       recent: {
@@ -339,6 +348,9 @@ export const pt: TranslationDict = {
       },
       pwd: {
         description: 'Mostrar diretório de trabalho atual',
+      },
+      clear: {
+        description: 'Limpar a tela do terminal',
       },
       logout: {
         description: 'Sair da sessão atual',
@@ -481,34 +493,13 @@ export const pt: TranslationDict = {
   messages: {
     sidebar: {
       conversationsTitle: 'Conversas',
-      allMessages: 'Todas as mensagens',
+      allMessages: 'Todas as Mensagens',
       groups: 'Grupos',
       starred: 'Favoritas',
       archived: 'Arquivadas',
     },
     searchPlaceholder: 'Buscar conversas...',
-    typePlaceholder: 'Escrever mensagem...',
-    time: {
-      yesterday: 'Ontem',
-      monday: 'Segunda-feira',
-    },
-    mock: {
-      lastMessage: {
-        seeYouTomorrow: 'Até amanhã!',
-        newMockupsReady: 'Novos mockups estão prontos',
-        thanksForTheHelp: 'Obrigado pela ajuda!',
-        meetingAt2pm: 'Reunião às 14:00',
-        gotItThanks: 'Entendido, obrigado!',
-      },
-      message: {
-        heyHowAreYouDoing: 'Oi! Como você está?',
-        imGoodWorkingOnNewProject: 'Estou bem, valeu! Trabalhando no novo projeto.',
-        thatSoundsExcitingCoffeeLater: 'Que legal! Quer tomar um café mais tarde?',
-        sureHowAbout3pm: 'Claro! Que tal às 15:00?',
-        seeYouTomorrow: 'Até amanhã!',
-        okFixResponsiveLayout: 'Beleza — vamos corrigir o layout responsivo.',
-      },
-    },
+    typePlaceholder: 'Digite uma mensagem...',
     menu: {
       newMessage: 'Nova mensagem',
       deleteConversation: 'Excluir conversa',
@@ -539,13 +530,62 @@ export const pt: TranslationDict = {
     },
   },
   mail: {
+    login: {
+      title: 'E-mail',
+      subtitle: 'Entre na sua conta',
+      emailPlaceholder: 'E-mail',
+      passwordPlaceholder: 'Senha',
+      signingIn: 'Entrando...',
+      signIn: 'Entrar',
+      signOut: 'Sair',
+      createAccountInfo: 'Crie uma conta através de um provedor de e-mail',
+    },
     menu: {
-      newMailbox: 'Nova caixa de correio',
-      onlineStatus: 'Status online',
-      newMessage: 'Nova mensagem',
+      newMailbox: 'Nova Caixa de Correio',
+      onlineStatus: 'Status Online',
+      newMessage: 'Nova Mensagem',
       reply: 'Responder',
-      replyAll: 'Responder a todos',
+      replyAll: 'Responder a Todos',
       forward: 'Encaminhar',
+    },
+    sidebar: {
+      mailboxes: 'Caixas de Correio',
+      inbox: 'Entrada',
+      starred: 'Favoritas',
+      archived: 'Arquivadas',
+      trash: 'Lixeira',
+    },
+    search: {
+      placeholder: 'Buscar e-mails...',
+    },
+    empty: {
+      noEmails: 'Sem e-mails',
+      noEmailsFound: 'Nenhum e-mail encontrado',
+      selectEmail: 'Selecione um e-mail para ler',
+    },
+    actions: {
+      reply: 'Responder',
+      forward: 'Encaminhar',
+      archive: 'Arquivar',
+      unarchive: 'Desarquivar',
+      delete: 'Excluir',
+    },
+    time: {
+      minutesAgo: 'há {{minutes}}m',
+      hoursAgo: 'há {{hours}}h',
+      today: 'Hoje',
+      yesterday: 'Ontem',
+      daysAgo: 'há {{days}}d',
+    },
+    attachments: {
+      title: 'Anexos',
+      count: '{{count}} anexo',
+      count_plural: '{{count}} anexos',
+      download: 'Baixar',
+      downloaded: 'Baixado',
+      downloadedTo: '{{name}} baixado para {{folder}}',
+      downloadFailed: 'Falha no download',
+      downloadFailedMessage: 'Falha ao baixar {{name}}',
     },
   },
   notepad: {
@@ -913,18 +953,62 @@ export const pt: TranslationDict = {
       total: 'Total',
     },
     danger: {
-      title: 'Zona de perigo',
-      softResetTitle: 'Reinicialização suave',
+      title: 'Zona de Perigo',
+      softResetTitle: 'Reinicialização Suave',
       softResetDescription:
-        'Redefine preferências, tema, posições dos ícones e estados dos apps. Seus arquivos e pastas permanecem.',
-      resetPreferences: 'Redefinir preferências',
-      confirmReset: 'Confirmar redefinição',
-      hardResetTitle: 'Reinicialização completa',
+        'Redefine preferências, tema, posições de ícones e estados de apps. Seus arquivos e pastas serão preservados.',
+      resetPreferences: 'Redefinir Preferências',
+      confirmReset: 'Confirmar Redefinição',
+      hardResetTitle: 'Reinicialização Completa',
       hardResetDescription:
-        'Apaga todos os dados completamente, incluindo arquivos, pastas e preferências. Esta ação não pode ser desfeita.',
-      hardResetWarning: '⚠️ Todos os arquivos e pastas personalizados serão apagados permanentemente',
-      factoryReset: 'Redefinição de fábrica',
-      deleteEverything: 'Sim, apagar tudo',
+        'Apaga completamente todos os dados, incluindo arquivos, pastas e configurações. Esta ação não pode ser desfeita.',
+      hardResetWarning: '⚠️ Todos os arquivos e pastas personalizados serão excluídos permanentemente',
+      factoryReset: 'Redefinição de Fábrica',
+      deleteEverything: 'Sim, Excluir Tudo',
+    },
+  },
+  onboarding: {
+    steps: {
+      language: {
+        title: 'Bem-vindo ao Aurora',
+        description: 'Selecione seu idioma para começar',
+      },
+      account: {
+        title: 'Crie Sua Conta',
+        description: 'Configure a conta principal de administrador',
+      },
+      theme: {
+        title: 'Personalizar',
+        description: 'Deixe com a sua cara',
+      },
+      finishing: {
+        title: 'Configurando...',
+        description: 'Aplicando configurações',
+      },
+    },
+    account: {
+      fullName: 'Nome Completo',
+      fullNamePlaceholder: 'Exemplo: João Silva',
+      username: 'Usuário',
+      password: 'Senha',
+      passwordHint: 'Dica da Senha (Opcional)',
+      passwordHintPlaceholder: 'Exemplo: Nome do seu primeiro pet',
+    },
+    theme: {
+      mode: 'Modo do Tema',
+      accentColor: 'Cor de Destaque',
+      darkMode: 'Escuro (Neutral)',
+      lightMode: 'Claro',
+      comingSoon: 'Em breve',
+    },
+    finishing: {
+      title: 'Tudo pronto!',
+      subtitle: 'O Aurora OS está pronto. Redirecionando para a tela de login...',
+    },
+    buttons: {
+      next: 'Próximo',
+      back: 'Voltar',
+      startUsing: 'Começar a Usar o Aurora',
     },
   },
 };

@@ -21,6 +21,12 @@ export const de: TranslationDict = {
       exit: {
         label: 'Herunterfahren',
         desc: 'Sitzung beenden',
+        confirm: {
+          title: 'System-Shutdown',
+          message: 'Sind Sie sicher, dass Sie das System herunterfahren möchten? Nicht gespeicherter Fortschritt könnte verloren gehen.',
+          cancel: 'Abbrechen',
+          confirm: 'Herunterfahren',
+        },
       },
     },
     bios: {
@@ -46,21 +52,6 @@ export const de: TranslationDict = {
       originalDistribution: 'Originaldistribution',
       temperedDistribution: 'Gehärtete Distribution',
     },
-  },
-  apps: {
-    finder: 'Dateimanager',
-    systemSettings: 'Systemeinstellungen',
-    photos: 'Fotos',
-    music: 'Musik',
-    messages: 'Nachrichten',
-    browser: 'Browser',
-    terminal: 'Terminal',
-    trash: 'Papierkorb',
-    devCenter: 'DEV Center',
-    notepad: 'Notizblock',
-    calendar: 'Kalender',
-    appStore: 'App Store',
-    mail: 'Mail',
   },
   appDescriptions: {
     finder: 'Dateiverwaltung',
@@ -103,50 +94,6 @@ export const de: TranslationDict = {
   commandPalette: {
     title: 'Befehlspalette',
     description: 'Befehl zum Ausführen suchen...',
-  },
-  onboarding: {
-    steps: {
-      language: {
-        title: 'Willkommen bei Aurora',
-        description: 'Wähle deine Sprache, um zu beginnen',
-      },
-      account: {
-        title: 'Konto erstellen',
-        description: 'Richte das primäre Administratorkonto ein',
-      },
-      theme: {
-        title: 'Personalisieren',
-        description: 'Mach es zu deinem',
-      },
-      finishing: {
-        title: 'Wird eingerichtet...',
-        description: 'Konfiguration wird angewendet',
-      },
-    },
-    account: {
-      fullName: 'Vollständiger Name',
-      fullNamePlaceholder: 'Beispiel: Max Mustermann',
-      username: 'Benutzername',
-      password: 'Passwort',
-      passwordHint: 'Passworthinweis (optional)',
-      passwordHintPlaceholder: 'Beispiel: Name deines ersten Haustiers',
-    },
-    theme: {
-      mode: 'Designmodus',
-      accentColor: 'Akzentfarbe',
-      darkMode: 'Dunkel (Neutral)',
-      lightMode: 'Hell',
-      comingSoon: 'Demnächst',
-    },
-    finishing: {
-      title: 'Alles bereit!',
-      subtitle: 'Aurora OS ist bereit. Weiterleitung zum Anmeldebildschirm...',
-    },
-    buttons: {
-      next: 'Weiter',
-      back: 'Zurück',
-      startUsing: 'Aurora starten',
-    },
   },
   login: {
     softReset: 'Sanfter Reset',
@@ -288,9 +235,9 @@ export const de: TranslationDict = {
       title: 'Keine Apps gefunden',
       description: 'Passe Suche oder Kategorie an, um zu finden, was du suchst.',
     },
-    systemApp: 'System-App',
     size: 'Größe',
     sizeUnknown: 'Unbekannt',
+    systemApp: 'System-App',
     install: 'Installieren',
     uninstall: 'Deinstallieren',
     installed: 'Installiert',
@@ -309,11 +256,16 @@ export const de: TranslationDict = {
       newTab: 'Neuer Tab',
     },
     welcome: {
-      title: 'Willkommen',
-      subtitle: 'Deine Lieblingsseiten',
+      searchPlaceholder: 'Websites suchen oder Adresse eingeben...',
+      favorites: 'Favoriten',
+      recentActivity: 'Letzte Aktivitäten',
     },
-    recentActivity: 'Letzte Aktivitäten',
-    exampleWebsite: 'Beispiel-Website {{index}}',
+    searchPlaceholder: 'Suchen oder Adresse eingeben...',
+    error: {
+      pageNotFound: 'Seite nicht gefunden',
+      pageNotFoundDesc: 'Die Webseite {{url}} konnte nicht gefunden werden.',
+      goHome: 'Zur Startseite',
+    },
   },
   music: {
     sidebar: {
@@ -396,6 +348,9 @@ export const de: TranslationDict = {
       },
       who: {
         description: 'Angemeldete Benutzer anzeigen',
+      },
+      clear: {
+        description: 'Terminalbildschirm löschen',
       },
       cat: {
         description: 'Dateiinhalte anzeigen',
@@ -539,27 +494,6 @@ export const de: TranslationDict = {
     },
     searchPlaceholder: 'Unterhaltungen suchen...',
     typePlaceholder: 'Nachricht schreiben...',
-    time: {
-      yesterday: 'Gestern',
-      monday: 'Montag',
-    },
-    mock: {
-      lastMessage: {
-        seeYouTomorrow: 'Bis morgen!',
-        newMockupsReady: 'Neue Mockups sind fertig',
-        thanksForTheHelp: 'Danke für die Hilfe!',
-        meetingAt2pm: 'Meeting um 14:00',
-        gotItThanks: 'Alles klar, danke!',
-      },
-      message: {
-        heyHowAreYouDoing: 'Hey! Wie geht’s dir?',
-        imGoodWorkingOnNewProject: 'Mir geht’s gut, danke! Ich arbeite am neuen Projekt.',
-        thatSoundsExcitingCoffeeLater: 'Klingt spannend! Lust später einen Kaffee zu holen?',
-        sureHowAbout3pm: 'Klar! Wie wäre es um 15:00?',
-        seeYouTomorrow: 'Bis morgen!',
-        okFixResponsiveLayout: 'Okay—lass uns das responsive Layout fixen.',
-      },
-    },
     menu: {
       newMessage: 'Neue Nachricht',
       deleteConversation: 'Unterhaltung löschen',
@@ -590,6 +524,16 @@ export const de: TranslationDict = {
     },
   },
   mail: {
+    login: {
+      title: 'E-Mail',
+      subtitle: 'Melden Sie sich bei Ihrem Konto an',
+      emailPlaceholder: 'E-Mail-Adresse',
+      passwordPlaceholder: 'Passwort',
+      signingIn: 'Anmeldung...',
+      signIn: 'Anmelden',
+      signOut: 'Abmelden',
+      createAccountInfo: 'Erstellen Sie ein Konto über einen E-Mail-Anbieter',
+    },
     menu: {
       newMailbox: 'Neues Postfach',
       onlineStatus: 'Online-Status',
@@ -597,6 +541,45 @@ export const de: TranslationDict = {
       reply: 'Antworten',
       replyAll: 'Allen antworten',
       forward: 'Weiterleiten',
+    },
+    sidebar: {
+      mailboxes: 'Postfächer',
+      inbox: 'Posteingang',
+      starred: 'Markiert',
+      archived: 'Archiviert',
+      trash: 'Papierkorb',
+    },
+    search: {
+      placeholder: 'E-Mails suchen...',
+    },
+    empty: {
+      noEmails: 'Keine E-Mails',
+      noEmailsFound: 'Keine E-Mails gefunden',
+      selectEmail: 'Wählen Sie eine E-Mail zum Lesen aus',
+    },
+    actions: {
+      reply: 'Antworten',
+      forward: 'Weiterleiten',
+      archive: 'Archivieren',
+      unarchive: 'Dearchivieren',
+      delete: 'Löschen',
+    },
+    time: {
+      minutesAgo: 'vor {{minutes}}m',
+      hoursAgo: 'vor {{hours}}h',
+      today: 'Heute',
+      yesterday: 'Gestern',
+      daysAgo: 'vor {{days}}d',
+    },
+    attachments: {
+      title: 'Anhänge',
+      count: '{{count}} Anhang',
+      count_plural: '{{count}} Anhänge',
+      download: 'Herunterladen',
+      downloaded: 'Heruntergeladen',
+      downloadedTo: '{{name}} wurde nach {{folder}} heruntergeladen',
+      downloadFailed: 'Download fehlgeschlagen',
+      downloadFailedMessage: '{{name}} konnte nicht heruntergeladen werden',
     },
   },
   notepad: {
@@ -976,6 +959,50 @@ export const de: TranslationDict = {
       hardResetWarning: '⚠️ Alle benutzerdefinierten Dateien und Ordner werden dauerhaft gelöscht',
       factoryReset: 'Werkseinstellungen',
       deleteEverything: 'Ja, alles löschen',
+    },
+  },
+  onboarding: {
+    steps: {
+      language: {
+        title: 'Willkommen bei Aurora',
+        description: 'Wähle deine Sprache, um zu beginnen',
+      },
+      account: {
+        title: 'Konto erstellen',
+        description: 'Richte das primäre Administratorkonto ein',
+      },
+      theme: {
+        title: 'Personalisieren',
+        description: 'Mach es zu deinem',
+      },
+      finishing: {
+        title: 'Wird eingerichtet...',
+        description: 'Konfiguration wird angewendet',
+      },
+    },
+    account: {
+      fullName: 'Vollständiger Name',
+      fullNamePlaceholder: 'Beispiel: Max Mustermann',
+      username: 'Benutzername',
+      password: 'Passwort',
+      passwordHint: 'Passworthinweis (optional)',
+      passwordHintPlaceholder: 'Beispiel: Name deines ersten Haustiers',
+    },
+    theme: {
+      mode: 'Designmodus',
+      accentColor: 'Akzentfarbe',
+      darkMode: 'Dunkel (Neutral)',
+      lightMode: 'Hell',
+      comingSoon: 'Demnächst',
+    },
+    finishing: {
+      title: 'Alles bereit!',
+      subtitle: 'Aurora OS ist bereit. Weiterleitung zum Anmeldebildschirm...',
+    },
+    buttons: {
+      next: 'Weiter',
+      back: 'Zurück',
+      startUsing: 'Aurora starten',
     },
   },
 };
