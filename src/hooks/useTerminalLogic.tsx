@@ -499,6 +499,15 @@ export function useTerminalLogic(
     []
   );
 
+  // Command history management functions
+  const getCommandHistoryFn = useCallback(() => {
+    return commandHistory;
+  }, [commandHistory]);
+
+  const clearCommandHistoryFn = useCallback(() => {
+    setCommandHistory([]);
+  }, []);
+
   const executeCommand = async (cmdInput: string) => {
     if (promptState && promptResolverRef.current) {
       const resolver = promptResolverRef.current;
@@ -824,6 +833,8 @@ export function useTerminalLogic(
                       setIsSudoAuthorized,
                       verifyPassword,
                       t,
+                      getCommandHistory: getCommandHistoryFn,
+                      clearCommandHistory: clearCommandHistoryFn,
                     });
 
                     if (result.output) scriptOutput.push(...result.output);
@@ -896,6 +907,8 @@ export function useTerminalLogic(
             verifyPassword: verifyPassword,
             onLaunchApp: onLaunchApp,
             t, // Inject translation function
+            getCommandHistory: getCommandHistoryFn,
+            clearCommandHistory: clearCommandHistoryFn,
           });
 
           cmdOutput = result.output;

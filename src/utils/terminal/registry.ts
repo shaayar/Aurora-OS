@@ -25,6 +25,7 @@ import { chown } from './commands/chown';
 import { su } from './commands/su';
 import { sudo } from './commands/sudo';
 import { exit } from './commands/exit';
+import { history } from './commands/history';
 import { unlockDeveloperMode } from '../integrity';
 
 // Hidden system command for development
@@ -71,6 +72,7 @@ export const commands: Record<string, TerminalCommand> = {
     su,
     sudo,
     exit,
+    history,
     'dev-unlock': _sys_dev_override_cmd
 };
 

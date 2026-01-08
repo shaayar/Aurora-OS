@@ -448,6 +448,10 @@ export const de: TranslationDict = {
         description: 'Einen Befehl als anderer Benutzer ausführen',
         usage: 'sudo [optionen] [befehl]',
       },
+      history: {
+        description: 'Terminal-Befehlsverlauf anzeigen',
+        usage: 'history [-c] [n]',
+      },
     },
   },
   placeholderApp: {

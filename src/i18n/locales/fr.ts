@@ -515,6 +515,10 @@ export const fr: TranslationDict = {
         description: 'Exécuter une commande en tant qu\'autre utilisateur',
         usage: 'sudo [options] [commande]',
       },
+      history: {
+        description: 'Afficher l\'historique des commandes du terminal',
+        usage: 'history [-c] [n]',
+      },
     },
   },
   placeholderApp: {

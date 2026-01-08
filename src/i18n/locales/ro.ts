@@ -512,6 +512,10 @@ export const ro: TranslationDict = {
                 description: 'Execută o comandă ca alt utilizator',
                 usage: 'sudo [opțiuni] [comandă]',
             },
+            history: {
+                description: 'Afișează istoricul comenzilor din terminal',
+                usage: 'history [-c] [n]',
+            },
         },
     },
     placeholderApp: {

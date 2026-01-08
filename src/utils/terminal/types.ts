@@ -23,6 +23,8 @@ export interface CommandContext {
     verifyPassword: (username: string, passwordToTry: string) => boolean;
     print: (content: string | React.ReactNode) => void;
     t: (key: string, options?: any) => string;
+    getCommandHistory: () => string[];
+    clearCommandHistory: () => void;
 }
 
 export interface CommandResult {

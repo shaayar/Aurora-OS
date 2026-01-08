@@ -415,6 +415,7 @@ export const initialFileSystem: any = {
                 { name: 'su', type: 'file', permissions: '-rwsr-xr-x', owner: 'root', content: '#!/bin/bash\n#command su\n# switch user' },
                 { name: 'sudo', type: 'file', permissions: '-rwsr-xr-x', owner: 'root', content: '#!/bin/bash\n#command sudo\n# execute as superuser' },
                 { name: 'reset', type: 'file', permissions: '-rwxr-xr-x', owner: 'root', content: '#!/bin/bash\n#command reset\n# reset system' },
+                { name: 'history', type: 'file', permissions: '-rwxr-xr-x', owner: 'root', content: '#!/bin/bash\n#command history\n# display command history' },
             ],
         },
         // Boot loader files

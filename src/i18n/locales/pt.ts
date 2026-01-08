@@ -454,6 +454,10 @@ export const pt: TranslationDict = {
         description: 'Executar um comando como outro usuário',
         usage: 'sudo [opcoes] [comando]',
       },
+      history: {
+        description: 'Mostrar histórico de comandos do terminal',
+        usage: 'history [-c] [n]',
+      },
     },
   },
   placeholderApp: {
