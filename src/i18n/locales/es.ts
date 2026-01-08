@@ -282,6 +282,30 @@ export const es: TranslationDict = {
       },
     },
   },
+  memory: {
+    title: 'Memoria',
+    used: 'Usada',
+    pressure: 'Presión',
+    appMemory: 'Memoria de Apps',
+    wiredMemory: 'Memoria Reservada',
+    processName: 'Nombre del Proceso',
+    memory: 'Memoria',
+    swapUsed: 'Intercambio Usado',
+    systemWired: 'Sistema Aurora',
+    activeSession: 'Memoria Reservada (Sesión Activa)',
+    userSession: 'Sesión: {{user}}',
+    backgroundSession: 'Memoria Inactiva (Fondo)',
+    backgroundProcesses: '{{count}} Procesos en Segundo Plano',
+    instances: '{{count}} Instancias',
+    type: {
+      mainWindow: 'Ventana Principal',
+      extraWindow: 'Ventana Adicional',
+      extraTabs: '{{count}} Pestañas Extra',
+    },
+  },
+
+
+
   appStore: {
     menu: {
       checkForUpdates: 'Buscar actualizaciones...',

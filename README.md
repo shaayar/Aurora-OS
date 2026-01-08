@@ -108,6 +108,7 @@ Or use the [GitHub Pages](https://mental-os.github.io/Aurora-OS.js) (LIVE DEMO)
 ### Added
 
 - **Gamified Resource Monitor**: Implemented a global RAM monitoring system that simulates resource usage based on active/inactive user sessions, open windows, and background throttling.
+- **Memory Applet**: Added a new applet that displays memory usage and provides a way to see memory usage in real-time.
 - **Debugging Tools**: Exposed `window.aurora.checkRamUsage()` for real-time resource analysis in the console.
 - **Internationalization (i18n)**: Complete translation support for **Battery Applet** and **Audio Applet** across 6 languages (en, es, fr, de, pt, ro).
 - **Battery Metrics**: Added detailed battery health, cycle count, temperature, and voltage metrics (visible on supported hardware).

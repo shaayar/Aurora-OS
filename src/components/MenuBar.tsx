@@ -10,6 +10,7 @@ import { useFileSystem } from './FileSystemContext';
 import { AudioApplet } from './AudioApplet';
 import { NotificationCenter } from './NotificationCenter';
 import { BatteryApplet } from './BatteryApplet';
+import { MemoryApplet } from './MemoryApplet';
 import { hardReset, clearSession } from '../utils/memory';
 import {
   Menubar,
@@ -387,6 +388,7 @@ function MenuBarComponent({ focusedApp, onOpenApp }: MenuBarProps) {
 
       {/* Right side */}
       <div className="flex items-center gap-4 px-2">
+        <MemoryApplet />
         <BatteryApplet key={currentUser} />
         <button className="flex items-center justify-center text-white/90 hover:text-white transition-colors">
           <Wifi className="w-4 h-4" />

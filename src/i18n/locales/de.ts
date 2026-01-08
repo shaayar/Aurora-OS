@@ -217,6 +217,30 @@ export const de: TranslationDict = {
       },
     },
   },
+  memory: {
+    title: 'Speicher',
+    used: 'Verwendet',
+    pressure: 'Druck',
+    appMemory: 'App-Speicher',
+    wiredMemory: 'Reservierter Speicher',
+    processName: 'Prozessname',
+    memory: 'Speicher',
+    swapUsed: 'Swap verwendet',
+    systemWired: 'Aurora System',
+    activeSession: 'Reservierter Speicher (Aktive Sitzung)',
+    userSession: 'Sitzung: {{user}}',
+    backgroundSession: 'Inaktiver Speicher (Hintergrund)',
+    backgroundProcesses: '{{count}} Hintergrundprozesse',
+    instances: '{{count}} Instanzen',
+    type: {
+      mainWindow: 'Hauptfenster',
+      extraWindow: 'Zusatzfenster',
+      extraTabs: '{{count}} weitere Tabs',
+    },
+  },
+
+
+
   appStore: {
     menu: {
       checkForUpdates: 'Nach Updates suchen...',

@@ -281,6 +281,30 @@ export const ro: TranslationDict = {
             },
         },
     },
+  memory: {
+    title: 'Memorie',
+    used: 'Utilizată',
+    pressure: 'Presiune',
+    appMemory: 'Memorie Aplicații',
+    wiredMemory: 'Memorie Rezidentă',
+    processName: 'Nume Proces',
+    memory: 'Memorie',
+    swapUsed: 'Swap Utilizat',
+    systemWired: 'Sistem Aurora',
+    activeSession: 'Memorie Rezidentă (Sesiune Activă)',
+    userSession: 'Sesiune: {{user}}',
+    backgroundSession: 'Memorie Dormantă (Fundal)',
+    backgroundProcesses: '{{count}} Procese în Fundal',
+    instances: '{{count}} Instanțe',
+    type: {
+      mainWindow: 'Fereastră Principală',
+      extraWindow: 'Fereastră Extra',
+      extraTabs: '{{count}} Tab-uri Extra',
+    },
+  },
+
+
+
     appStore: {
         menu: {
             checkForUpdates: 'Verifică actualizări...',

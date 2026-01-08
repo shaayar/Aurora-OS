@@ -223,6 +223,30 @@ export const pt: TranslationDict = {
       },
     },
   },
+  memory: {
+    title: 'Memória',
+    used: 'Usada',
+    pressure: 'Pressão',
+    appMemory: 'Memória de Apps',
+    wiredMemory: 'Memória Residente',
+    processName: 'Nome do Processo',
+    memory: 'Memória',
+    swapUsed: 'Swap Usado',
+    systemWired: 'Sistema Aurora',
+    activeSession: 'Memória Residente (Sessão Ativa)',
+    userSession: 'Sessão: {{user}}',
+    backgroundSession: 'Memória Inativa (Fundo)',
+    backgroundProcesses: '{{count}} Processos em Segundo Plano',
+    instances: '{{count}} Instâncias',
+    type: {
+      mainWindow: 'Janela Principal',
+      extraWindow: 'Janela Adicional',
+      extraTabs: '{{count}} Abas Extras',
+    },
+  },
+
+
+
   appStore: {
     menu: {
       checkForUpdates: 'Verificar atualizações...',

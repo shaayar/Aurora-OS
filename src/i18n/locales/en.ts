@@ -230,6 +230,27 @@ export const en: TranslationDict = {
       },
     },
   },
+  memory: {
+    title: 'Memory',
+    used: 'Used',
+    pressure: 'Pressure',
+    appMemory: 'App Memory',
+    wiredMemory: 'Wired Memory',
+    processName: 'Process Name',
+    memory: 'Memory',
+    swapUsed: 'Swap Used',
+    systemWired: 'Aurora System',
+    activeSession: 'Wired Memory (Active Session)',
+    userSession: 'Session: {{user}}',
+    backgroundSession: 'Dormant Memory (Background)',
+    backgroundProcesses: '{{count}} Background Processes',
+    instances: '{{count}} Instances',
+    type: {
+      mainWindow: 'Main Window',
+      extraWindow: 'Extra Window',
+      extraTabs: '{{count}} Extra Tabs',
+    },
+  },
   appStore: {
     menu: {
       checkForUpdates: 'Check for Updates...',
