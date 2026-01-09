@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { useBattery } from '../hooks/useBattery';
 import { BatteryManager } from '../types';
@@ -97,7 +97,9 @@ describe('useBattery', () => {
 
         // Déclencher l'événement levelchange
         const levelChangeListeners = eventListeners.levelchange;
-        levelChangeListeners.forEach(listener => listener());
+        await act(async () => {
+            levelChangeListeners.forEach(listener => listener());
+        });
 
         await waitFor(() => {
             expect(result.current?.level).toBe(0.5);
@@ -119,7 +121,9 @@ describe('useBattery', () => {
 
         // Déclencher l'événement chargingchange
         const chargingChangeListeners = eventListeners.chargingchange;
-        chargingChangeListeners.forEach(listener => listener());
+        await act(async () => {
+            chargingChangeListeners.forEach(listener => listener());
+        });
 
         await waitFor(() => {
             expect(result.current?.charging).toBe(true);
@@ -141,7 +145,9 @@ describe('useBattery', () => {
 
         // Déclencher l'événement chargingtimechange
         const chargingTimeChangeListeners = eventListeners.chargingtimechange;
-        chargingTimeChangeListeners.forEach(listener => listener());
+        await act(async () => {
+            chargingTimeChangeListeners.forEach(listener => listener());
+        });
 
         await waitFor(() => {
             expect(result.current?.chargingTime).toBe(3600);
@@ -163,7 +169,9 @@ describe('useBattery', () => {
 
         // Déclencher l'événement dischargingtimechange
         const dischargingTimeChangeListeners = eventListeners.dischargingtimechange;
-        dischargingTimeChangeListeners.forEach(listener => listener());
+        await act(async () => {
+            dischargingTimeChangeListeners.forEach(listener => listener());
+        });
 
         await waitFor(() => {
             expect(result.current?.dischargingTime).toBe(5400);
