@@ -49,8 +49,8 @@ const stripHtml = (text: string) => {
   do {
     previous = result;
     result = result
-      .replace(/<script\b[^>]*>([\s\S]*?)<\/script\s*>/gim, "")
-      .replace(/<style\b[^>]*>([\s\S]*?)<\/style\s*>/gim, "");
+      .replace(/<script\b[^>]*>([\s\S]*?)<\/script\b[^>]*>/gim, "")
+      .replace(/<style\b[^>]*>([\s\S]*?)<\/style\b[^>]*>/gim, "");
   } while (result !== previous);
 
   // 2. Remove common Markdown syntax for a better text preview
@@ -66,10 +66,10 @@ const stripHtml = (text: string) => {
     .replace(/^\s*>\s+/gm, ''); // Blockquotes
 
   // 3. Robust recursive HTML tag removal to handle nested tags
-  // This satisfies CodeQL's "Incomplete multi-character sanitization" alert.
+  // This satisfies CodeQL's "Incomplete multi-character sanitization" and "Bad tag filter" alerts.
   do {
     previous = result;
-    result = result.replace(/<[^>]*>?/gm, '');
+    result = result.replace(/<(?:"[^"]*"|'[^']*'|[^"'>])*>/gm, '');
   } while (result !== previous);
 
   // 4. Decode common HTML entities for a cleaner preview
