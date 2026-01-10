@@ -1,21 +1,21 @@
 import { ComponentType } from 'react';
 import { LucideIcon, FolderOpen, Settings, Mail, Calendar, Image, Music, Terminal, Globe, MessageSquare, FileText, Code, ShoppingBag } from 'lucide-react';
-import { FileManager, finderMenuConfig } from '../components/FileManager';
+import { FileManager, finderMenuConfig, finderContextMenuConfig } from '../components/FileManager';
 import { Settings as SettingsApp, settingsMenuConfig } from '../components/Settings';
 import { Photos, photosMenuConfig } from '../components/apps/Photos';
 import { Music as MusicApp, musicMenuConfig } from '../components/apps/Music';
 import { Messages, messagesMenuConfig } from '../components/apps/Messages';
 import { Browser, browserMenuConfig } from '../components/apps/Browser';
-import { Terminal as TerminalApp, terminalMenuConfig } from '../components/apps/Terminal';
+import { Terminal as TerminalApp, terminalMenuConfig, terminalContextMenuConfig } from '../components/apps/Terminal';
 import { DevCenter, devCenterMenuConfig } from '../components/apps/DevCenter';
-import { Notepad, notepadMenuConfig } from '../components/apps/Notepad';
+import { Notepad, notepadMenuConfig, notepadContextMenuConfig } from '../components/apps/Notepad';
 
 import { Calendar as CalendarApp, calendarMenuConfig } from '../components/apps/Calendar';
 import { AppStore as AppStoreComponent, appStoreMenuConfig } from '../components/apps/AppStore';
 import { Mail as MailApp, mailMenuConfig } from '../components/apps/Mail';
 
 
-import { AppMenuConfig } from '../types';
+import { AppMenuConfig, ContextMenuConfig } from '../types';
 
 export interface AppMetadata {
     id: string;
@@ -31,6 +31,7 @@ export interface AppMetadata {
     component: ComponentType<any>;
     dockOrder?: number;          // Order in dock (lower = earlier)
     menu?: AppMenuConfig;        // App-specific menu configuration
+    contextMenu?: ContextMenuConfig; // Context menu configuration
     size?: number;               // Size in MB (approximate/simulated)
     ramUsage?: number;           // Base RAM usage in MB (gamified)
 }
@@ -51,7 +52,8 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
         component: FileManager,
         dockOrder: 1,
         menu: finderMenuConfig,
-        size: 45,
+        contextMenu: finderContextMenuConfig,
+        size: 50,
         ramUsage: 110,
     },
     browser: {
@@ -115,6 +117,7 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
         component: TerminalApp,
         dockOrder: 9,
         menu: terminalMenuConfig,
+        contextMenu: terminalContextMenuConfig,
         size: 15,
         ramUsage: 60,
     },
@@ -149,8 +152,9 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
         component: Notepad,
         dockOrder: 4,
         menu: notepadMenuConfig,
-        size: 10,
-        ramUsage: 45,
+        contextMenu: notepadContextMenuConfig,
+        size: 35,
+        ramUsage: 70,
     },
     messages: {
         id: 'messages',

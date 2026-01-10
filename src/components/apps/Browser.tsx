@@ -23,7 +23,11 @@ const FALLBACK_TAB: Tab = {
   id: 'fallback',
   url: 'browser://welcome',
   renderedUrl: 'browser://welcome',
-  title: 'Welcome',
+  title: 'Welcome', // This is state, might need t() at render time or initial state? 
+                    // State usually keeps the raw 'title'. Let's check where it's used.
+                    // It's used in TabBar (tab.title).
+                    // If we store 'Welcome', we can't translate easily later unless we store key?
+                    // For now, let's look at the error screen which is easier.
   isLoading: false,
   progress: 0,
   history: [{ url: 'browser://welcome', title: 'Welcome', timestamp: new Date() }],
@@ -430,12 +434,12 @@ export function Browser({ owner }: { owner?: string }) {
           <div className="h-full flex flex-col items-center justify-center bg-gray-900 text-white p-8">
             <div className="bg-white/5 p-6 rounded-2xl border border-white/10 flex flex-col items-center max-w-md text-center">
               <AlertTriangle className="w-12 h-12 text-yellow-500 mb-4" />
-              <h1 className="text-xl font-bold mb-2">Address Not Found</h1>
+              <h1 className="text-xl font-bold mb-2">{t('browser.error.pageNotFound')}</h1>
               <p className="text-white/50 mb-6 text-sm">
-                We couldn't find a site at <span className="text-blue-300 font-mono">{activeTab.renderedUrl}</span>.
+                {t('browser.error.pageNotFoundDesc', { url: activeTab.renderedUrl })}
               </p>
               <button onClick={goHome} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-md transition-colors text-sm font-medium">
-                Return Home
+                 {t('browser.error.goHome')}
               </button>
             </div>
           </div>

@@ -74,14 +74,27 @@ function BreadcrumbPill({ name, isLast, accentColor, onClick, onDrop }: Breadcru
   );
 }
 
-export function FileManager({ initialPath, onOpenApp, owner }: { initialPath?: string; onOpenApp?: (id: string, args?: any, owner?: string) => void, owner?: string }) {
+import { ContextMenuConfig } from '@/types';
+
+// ... (existing imports)
+
+export const finderContextMenuConfig: ContextMenuConfig = {
+  items: [
+    { type: 'item', labelKey: 'menubar.items.newFolder', label: 'New Folder', action: 'new-folder' },
+    { type: 'item', labelKey: 'menubar.items.paste', label: 'Paste', action: 'paste', disabled: true },
+    { type: 'separator' },
+    { type: 'item', labelKey: 'menubar.items.getInfo', label: 'Get Info', action: 'get-info' }
+  ]
+};
+
+export function FileManager({ id, initialPath, onOpenApp, owner }: { id: string; initialPath?: string; onOpenApp?: (id: string, args?: any, owner?: string) => void, owner?: string }) {
   const { accentColor, activeUser: desktopUser } = useAppContext();
   const { t } = useI18n();
   const activeUser = owner || desktopUser;
   useMusic();
   // Drag and Drop Logic
   const [dragTargetId, setDragTargetId] = useState<string | null>(null);
-  const { listDirectory, homePath, moveNodeById, getNodeAtPath, moveToTrash, resolvePath, users } = useFileSystem();
+  const { listDirectory, homePath, moveNodeById, getNodeAtPath, moveToTrash, resolvePath, users, createDirectory } = useFileSystem();
 
   const [containerRefSetter, { width }] = useElementSize();
   const gridRef = useRef<HTMLDivElement>(null);
@@ -110,6 +123,26 @@ export function FileManager({ initialPath, onOpenApp, owner }: { initialPath?: s
       setLastPath(currentPath);
     }
   }, [currentPath, setLastPath]);
+
+  // Handle Context Menu Actions
+  useEffect(() => {
+    const handleMenuAction = (e: CustomEvent) => {
+      const { action, appId, windowId } = e.detail;
+      if (appId !== 'finder' || (windowId && windowId !== id)) return;
+
+      switch (action) {
+        case 'new-folder':
+          createDirectory(currentPath, 'New Folder', activeUser);
+          break;
+        case 'get-info':
+           notify.system('success', 'Finder', `${t('fileManager.toasts.showingInfo') || 'Path'}: ${currentPath}`);
+           break;
+      }
+    };
+
+    window.addEventListener('app-menu-action', handleMenuAction as EventListener);
+    return () => window.removeEventListener('app-menu-action', handleMenuAction as EventListener);
+  }, [currentPath, createDirectory, activeUser, t, id]);
 
   // Load directory contents when path changes
   useEffect(() => {

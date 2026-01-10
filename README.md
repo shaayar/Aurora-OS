@@ -107,7 +107,7 @@ Or use the [GitHub Pages](https://mental-os.github.io/Aurora-OS.js) (LIVE DEMO)
 
 ### Added
 
--
+- **Context menu**: Each APP feeds context menu information the same way they feed Menu Bar items. Some apps may not have/require context menu items.
 
 ### Improved
 

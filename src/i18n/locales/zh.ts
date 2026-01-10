@@ -154,8 +154,9 @@ export const zh: TranslationDict = {
 		},
 		items: {
 			newWindow: '新窗口',
-			newFolder: '新建文件夹',
-			closeWindow: '关闭窗口',
+      newFolder: '新建文件夹',
+      changeWallpaper: '更改壁纸',
+      closeWindow: '关闭窗口',
 			undo: '撤销',
 			redo: '重做',
 			cut: '剪切',
@@ -168,9 +169,10 @@ export const zh: TranslationDict = {
 			bringAllToFront: '全部置于最前',
 			back: '后退',
 			forward: '前进',
-			enclosingFolder: '上级文件夹',
-		},
-		help: {
+      enclosingFolder: '上级文件夹',
+      getInfo: '显示简介',
+    },
+    help: {
 			appHelp: '{{appName}} 帮助',
 		},
 		default: {
@@ -370,9 +372,10 @@ export const zh: TranslationDict = {
 	},
 	terminal: {
 		menu: {
-			newTab: '新标签页',
-			clearScrollback: '清除滚动缓冲',
-		},
+      newTab: '新建标签页',
+      clearScrollback: '清除回滚',
+      killProcess: '结束进程',
+    },
 		help: {
 			availableCommands: '可用命令：',
 			usage: '用法',

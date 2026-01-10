@@ -210,6 +210,7 @@ export const fr: TranslationDict = {
     items: {
       newWindow: 'Nouvelle fenêtre',
       newFolder: 'Nouveau dossier',
+      changeWallpaper: "Changer le fond d'écran",
       closeWindow: 'Fermer la fenêtre',
       undo: 'Annuler',
       redo: 'Rétablir',
@@ -223,7 +224,8 @@ export const fr: TranslationDict = {
       bringAllToFront: 'Tout ramener au premier plan',
       back: 'Précédent',
       forward: 'Suivant',
-      enclosingFolder: 'Dossier englobant',
+      enclosingFolder: 'Dossier parent',
+      getInfo: 'Lire les informations',
     },
     help: {
       appHelp: 'Aide de {{appName}}',
@@ -431,7 +433,8 @@ export const fr: TranslationDict = {
   terminal: {
     menu: {
       newTab: 'Nouvel onglet',
-      clearScrollback: 'Effacer le défilement',
+      clearScrollback: "Effacer l'historique",
+      killProcess: 'Tuer le processus',
     },
     help: {
       availableCommands: 'Commandes disponibles :',

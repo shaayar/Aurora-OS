@@ -157,6 +157,7 @@ export const en: TranslationDict = {
     items: {
       newWindow: 'New Window',
       newFolder: 'New Folder',
+      changeWallpaper: 'Change Wallpaper',
       closeWindow: 'Close Window',
       undo: 'Undo',
       redo: 'Redo',
@@ -171,6 +172,7 @@ export const en: TranslationDict = {
       back: 'Back',
       forward: 'Forward',
       enclosingFolder: 'Enclosing Folder',
+      getInfo: 'Get Info',
     },
     help: {
       appHelp: '{{appName}} Help',
@@ -375,6 +377,7 @@ export const en: TranslationDict = {
     menu: {
       newTab: 'New Tab',
       clearScrollback: 'Clear Scrollback',
+      killProcess: 'Kill Process',
     },
     help: {
       availableCommands: 'Available commands:',

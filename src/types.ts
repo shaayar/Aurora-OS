@@ -16,6 +16,28 @@ export interface AppMenuConfig {
     items?: Record<string, MenuItem[]>; // Content for each menu
 }
 
+export type ContextMenuItem =
+    | { type: 'separator' }
+    | {
+        type?: 'item';
+        label: string;
+        labelKey?: string;
+        action?: string;
+        shortcut?: string;
+        disabled?: boolean;
+        destructive?: boolean; // Red text
+    }
+    | {
+        type: 'submenu';
+        label: string;
+        labelKey?: string;
+        items: ContextMenuItem[];
+    };
+
+export interface ContextMenuConfig {
+    items: ContextMenuItem[];
+}
+
 export interface BatteryInfo {
     level: number; // 0-1
     charging: boolean;

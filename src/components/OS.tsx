@@ -174,7 +174,7 @@ export default function OS() {
         switch (type) {
             case 'finder':
                 title = 'Finder';
-                content = <FileManager owner={owner} initialPath={data?.path} onOpenApp={openWindowRef.current} />;
+                content = <FileManager id="template" owner={owner} initialPath={data?.path} onOpenApp={openWindowRef.current} />;
                 break;
             case 'settings':
                 title = 'System Settings';
@@ -205,11 +205,11 @@ export default function OS() {
             case 'terminal':
                 title = 'Terminal';
                 // Need to forward the ref logic if terminal is special
-                content = <Terminal onLaunchApp={(id, args, owner) => openWindowRef.current(id, { path: args?.[0] }, owner)} owner={owner} />;
+                content = <Terminal id="template" onLaunchApp={(id, args, owner) => openWindowRef.current(id, { path: args?.[0] }, owner)} owner={owner} />;
                 break;
             case 'trash':
                 title = 'Trash';
-                content = <FileManager owner={owner} initialPath="~/.Trash" onOpenApp={openWindowRef.current} />;
+                content = <FileManager id="template" owner={owner} initialPath="~/.Trash" onOpenApp={openWindowRef.current} />;
                 break;
             case 'dev-center':
                 title = 'DEV Center';
@@ -217,7 +217,7 @@ export default function OS() {
                 break;
             case 'notepad':
                 title = 'Notepad';
-                content = <Notepad owner={owner} initialPath={data?.path} />;
+                content = <Notepad id="template" owner={owner} initialPath={data?.path} />;
                 break;
             case 'calendar':
                 title = 'Calendar';
@@ -388,6 +388,7 @@ export default function OS() {
                 icons={desktopIcons}
                 onUpdateIconsPositions={updateIconsPositions}
                 onIconDoubleClick={handleIconDoubleClick}
+                onOpenApp={openWindow}
             />
 
             <MenuBar

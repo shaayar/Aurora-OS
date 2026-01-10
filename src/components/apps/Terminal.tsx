@@ -4,11 +4,12 @@ import pkg from '../../../package.json';
 import { useTerminalLogic } from '../../hooks/useTerminalLogic';
 
 export interface TerminalProps {
+  id: string;
   onLaunchApp?: (appId: string, args: string[], owner?: string) => void;
   owner?: string;
 }
 
-export function Terminal({ onLaunchApp, owner }: TerminalProps) {
+export function Terminal({ id, onLaunchApp, owner }: TerminalProps) {
   const {
     input,
     setInput,
@@ -21,8 +22,33 @@ export function Terminal({ onLaunchApp, owner }: TerminalProps) {
     handleKeyDown,
     isCommandValid,
     homePath,
-    promptState
+    promptState,
+    clearHistory
   } = useTerminalLogic(onLaunchApp, owner);
+
+  // Handle Context Menu Actions
+  useEffect(() => {
+    const handleMenuAction = (e: CustomEvent) => {
+      const { action, appId, windowId: targetWindowId } = e.detail;
+      if (appId !== 'terminal' || (targetWindowId && targetWindowId !== id)) return;
+
+      switch (action) {
+        case 'clear':
+          clearHistory();
+          break;
+        case 'kill':
+          // Simulate kill logic
+          setInput(() => '');
+          window.dispatchEvent(new CustomEvent('terminal-kill', { detail: { id: 'current' } }));
+          // Ideally we would push a ^C to history but we need access to 'history' setter which is not exposed directly for appending external content simply.
+          // For now clearing input is enough or we rely on logic hook extension.
+          break;
+      }
+    };
+
+    window.addEventListener('app-menu-action', handleMenuAction as EventListener);
+    return () => window.removeEventListener('app-menu-action', handleMenuAction as EventListener);
+  }, [clearHistory, setInput, id]);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -209,7 +235,15 @@ const TerminalHistoryItem = memo(function TerminalHistoryItem({ item, homePath, 
   );
 });
 
-import { AppMenuConfig } from '../../types';
+import { AppMenuConfig, ContextMenuConfig } from '../../types';
+
+export const terminalContextMenuConfig: ContextMenuConfig = {
+  items: [
+    { type: 'item', labelKey: 'terminal.menu.clearScrollback', label: 'Clear Scrollback', action: 'clear' },
+    { type: 'separator' },
+    { type: 'item', labelKey: 'terminal.menu.killProcess', label: 'Kill Process', action: 'kill', destructive: true } // destructive = red
+  ]
+};
 
 export const terminalMenuConfig: AppMenuConfig = {
   menus: ['Shell', 'Edit', 'View', 'Window', 'Help'],

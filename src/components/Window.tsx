@@ -1,4 +1,4 @@
-import { memo, useState, useRef, useCallback, useMemo, useEffect } from 'react';
+import React, { memo, useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Maximize2 } from 'lucide-react';
 import { Rnd } from 'react-rnd';
 import type { WindowState } from '../hooks/useWindowManager';
@@ -6,6 +6,14 @@ import { useAppContext } from './AppContext';
 import { WindowContext } from './WindowContext';
 import { useThemeColors } from '../hooks/useThemeColors';
 import { cn } from './ui/utils';
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+} from './ui/context-menu';
+import { renderContextMenuItems } from './ui/context-menu-utils';
+import { getApp } from '../config/appRegistry';
+import { useI18n } from '../i18n';
 
 interface WindowProps {
   window: WindowState;
@@ -30,6 +38,9 @@ function WindowComponent({
 }: WindowProps) {
   const { titleBarBackground, accentColor } = useThemeColors();
   const { disableShadows, reduceMotion, blurEnabled } = useAppContext();
+  const { t } = useI18n();
+  const appConfig = getApp(window.type);
+  const contextMenuConfig = appConfig?.contextMenu;
   const [isDragging, setIsDragging] = useState(false);
   const [beforeClose, setBeforeClose] = useState<(() => boolean | Promise<boolean>) | null>(null);
 
@@ -233,7 +244,20 @@ function WindowComponent({
           style={{ pointerEvents: isDragging ? 'none' : 'auto' }}
         >
           <WindowContext.Provider value={windowContextValue}>
-            {window.content}
+            {contextMenuConfig ? (
+              <ContextMenu>
+                <ContextMenuTrigger asChild>
+                  <div className="h-full w-full">
+                    {React.isValidElement(window.content) ? React.cloneElement(window.content as React.ReactElement<any>, { id: window.id }) : window.content}
+                  </div>
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  {renderContextMenuItems(contextMenuConfig.items, t, appConfig?.name || window.title, window.id)}
+                </ContextMenuContent>
+              </ContextMenu>
+            ) : (
+              React.isValidElement(window.content) ? React.cloneElement(window.content as React.ReactElement<any>, { id: window.id }) : window.content
+            )}
           </WindowContext.Provider>
         </div>
       </div>

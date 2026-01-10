@@ -144,6 +144,7 @@ export const de: TranslationDict = {
     items: {
       newWindow: 'Neues Fenster',
       newFolder: 'Neuer Ordner',
+      changeWallpaper: 'Hintergrund ändern',
       closeWindow: 'Fenster schließen',
       undo: 'Rückgängig',
       redo: 'Wiederholen',
@@ -158,6 +159,7 @@ export const de: TranslationDict = {
       back: 'Zurück',
       forward: 'Vorwärts',
       enclosingFolder: 'Übergeordneter Ordner',
+      getInfo: 'Informationen',
     },
     help: {
       appHelp: '{{appName}} Hilfe',
@@ -364,7 +366,8 @@ export const de: TranslationDict = {
   terminal: {
     menu: {
       newTab: 'Neuer Tab',
-      clearScrollback: 'Scrollback löschen',
+      clearScrollback: 'Verlauf löschen',
+      killProcess: 'Prozess beenden',
     },
     help: {
       availableCommands: 'Verfügbare Befehle:',

@@ -44,6 +44,7 @@ import { useI18n } from '@/i18n/index';
 // ... interface
 
 interface NotepadProps {
+    id: string;
     owner?: string;
     initialPath?: string;
 }
@@ -74,7 +75,7 @@ const SUPPORTED_LANGUAGES = [
     { value: 'txt', labelKey: 'notepad.languages.txt' },
 ];
 
-export function Notepad({ owner, initialPath }: NotepadProps) {
+export function Notepad({ id, owner, initialPath }: NotepadProps) {
     const { t } = useI18n();
     const { readFile, createFile, writeFile, getNodeAtPath } = useFileSystem();
     const { accentColor, activeUser: desktopUser } = useAppContext();
@@ -276,13 +277,13 @@ export function Notepad({ owner, initialPath }: NotepadProps) {
         }
     };
 
-    const handleContentChange = (newContent: string) => {
-        setTabs(tabs.map(t =>
+    const handleContentChange = useCallback((newContent: string) => {
+        setTabs(prevTabs => prevTabs.map(t =>
             t.id === activeTabId
                 ? { ...t, content: newContent, isModified: true }
                 : t
         ));
-    };
+    }, [activeTabId]);
 
     // -- File I/O --
     const handleFileSelect = (path: string) => {
@@ -342,12 +343,12 @@ export function Notepad({ owner, initialPath }: NotepadProps) {
         setFilePickerMode(null);
     };
 
-    const handleSave = () => {
+    const handleSave = useCallback(() => {
         if (activeTab.path) {
             // Quick Save using writeFile (updates existing)
             const success = writeFile(activeTab.path, activeTab.content, activeUser);
             if (success) {
-                setTabs(tabs.map(t =>
+                setTabs(prevTabs => prevTabs.map(t =>
                     t.id === activeTabId
                         ? { ...t, isModified: false }
                         : t
@@ -362,7 +363,7 @@ export function Notepad({ owner, initialPath }: NotepadProps) {
             setFilePickerMode('save');
             return false; // FilePicker will handle the actual save
         }
-    };
+    }, [activeTab, activeTabId, activeUser, t, writeFile, setFilePickerMode]);
 
     const handleDiscardChanges = () => {
         if (pendingCloseTabId) {
@@ -442,6 +443,53 @@ export function Notepad({ owner, initialPath }: NotepadProps) {
         }
         return Prism.highlight(code, Prism.languages[lang], lang);
     }, [activeTab.context]);
+
+    // -- Context Menu Actions --
+    useEffect(() => {
+        const handleMenuAction = async (e: Event) => {
+            const customEvent = e as CustomEvent;
+            const { action, appId, windowId } = customEvent.detail;
+            if (appId !== 'notepad' || (windowId && windowId !== id)) return;
+            // ... (rest is same, but we need to ensure handleSave/handleContentChange are stable or ignored)
+            // Actually, suppressing dependency warning is easier if acceptable, or wrapping functions.
+            // Let's wrap functions in next steps if needed, but for now fixing the event type error.
+
+            switch (action) {
+                case 'save':
+                    handleSave();
+                    break;
+                case 'copy':
+                    document.execCommand('copy');
+                    break;
+                case 'paste':
+                     try {
+                        const text = await navigator.clipboard.readText();
+                        if (!text) return;
+                        
+                        const textarea = document.querySelector('.prism-editor textarea') as HTMLTextAreaElement;
+                        if (!textarea) return;
+
+                        const start = textarea.selectionStart;
+                        const end = textarea.selectionEnd;
+                        const current = activeTab.content;
+                        const validStart = start !== null ? start : current.length;
+                        const validEnd = end !== null ? end : current.length;
+
+                        const before = current.substring(0, validStart);
+                        const after = current.substring(validEnd);
+                        const newContent = before + text + after;
+
+                        handleContentChange(newContent);
+                    } catch (err) {
+                        console.error('Paste failed', err);
+                    }
+                    break;
+            }
+        };
+
+        window.addEventListener('app-menu-action', handleMenuAction);
+        return () => window.removeEventListener('app-menu-action', handleMenuAction);
+    }, [activeTab, handleSave, handleContentChange, id]);
 
     return (
         <div className="relative h-full w-full">
@@ -770,7 +818,16 @@ export function Notepad({ owner, initialPath }: NotepadProps) {
         </div>
     );
 }
-import { AppMenuConfig } from '@/types';
+import { AppMenuConfig, ContextMenuConfig } from '@/types';
+
+export const notepadContextMenuConfig: ContextMenuConfig = {
+    items: [
+        { type: 'item', labelKey: 'menubar.items.save', label: 'Save', action: 'save' },
+        { type: 'separator' },
+        { type: 'item', labelKey: 'menubar.items.copy', label: 'Copy', action: 'copy' },
+        { type: 'item', labelKey: 'menubar.items.paste', label: 'Paste', action: 'paste' },
+    ]
+};
 
 export const notepadMenuConfig: AppMenuConfig = {
     menus: ['File', 'Edit', 'Format', 'View', 'Window', 'Help'],

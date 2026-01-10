@@ -208,8 +208,9 @@ export const es: TranslationDict = {
     },
     items: {
       newWindow: 'Nueva ventana',
-      newFolder: 'Nueva carpeta',
-      closeWindow: 'Cerrar ventana',
+      newFolder: 'Nueva Carpeta',
+      changeWallpaper: 'Cambiar Fondo',
+      closeWindow: 'Cerrar Ventana',
       undo: 'Deshacer',
       redo: 'Rehacer',
       cut: 'Cortar',
@@ -222,7 +223,8 @@ export const es: TranslationDict = {
       bringAllToFront: 'Traer todo al frente',
       back: 'Atrás',
       forward: 'Adelante',
-      enclosingFolder: 'Carpeta contenedora',
+      enclosingFolder: 'Carpeta Superior',
+      getInfo: 'Obtener Información',
     },
     help: {
       appHelp: 'Ayuda de {{appName}}',
@@ -347,7 +349,7 @@ export const es: TranslationDict = {
     sizeUnknown: 'Desconocido',
     systemApp: 'App del sistema',
     install: 'Instalar',
-    uninstall: 'Desinstalar',
+    uninstall: 'Instalar',
     installed: 'Instalada',
   },
   browser: {
@@ -428,8 +430,9 @@ export const es: TranslationDict = {
   },
   terminal: {
     menu: {
-      newTab: 'Nueva pestaña',
-      clearScrollback: 'Limpiar historial',
+      newTab: 'Nueva Pestaña',
+      clearScrollback: 'Borrar Historial',
+      killProcess: 'Matar Proceso',
     },
     help: {
       availableCommands: 'Comandos disponibles:',

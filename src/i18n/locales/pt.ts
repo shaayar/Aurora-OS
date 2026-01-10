@@ -150,6 +150,7 @@ export const pt: TranslationDict = {
     items: {
       newWindow: 'Nova Janela',
       newFolder: 'Nova Pasta',
+      changeWallpaper: 'Alterar Papel de Parede',
       closeWindow: 'Fechar Janela',
       undo: 'Desfazer',
       redo: 'Refazer',
@@ -164,6 +165,7 @@ export const pt: TranslationDict = {
       back: 'Voltar',
       forward: 'Avançar',
       enclosingFolder: 'Pasta Superior',
+      getInfo: 'Obter Informações',
     },
     help: {
       appHelp: 'Ajuda do {{appName}}',
@@ -371,6 +373,7 @@ export const pt: TranslationDict = {
     menu: {
       newTab: 'Nova aba',
       clearScrollback: 'Limpar histórico',
+      killProcess: 'Encerrar Processo',
     },
     help: {
       availableCommands: 'Comandos disponíveis:',

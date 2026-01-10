@@ -1116,6 +1116,7 @@ export function useTerminalLogic(
     isCommandValid,
     homePath,
     promptState,
+    clearHistory: () => setHistory([]),
     isSudoAuthorized,
     setIsSudoAuthorized,
   };

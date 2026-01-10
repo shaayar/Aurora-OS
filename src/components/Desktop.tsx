@@ -11,6 +11,14 @@ export interface DesktopIcon {
 // import { lightenColor } from '../utils/colors';
 import { FileIcon } from './ui/FileIcon';
 import { useFileSystem } from './FileSystemContext';
+import { ContextMenuItem } from '../types';
+import { useI18n } from '../i18n';
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+} from './ui/context-menu';
+import { renderContextMenuItems } from './ui/context-menu-utils';
 import defaultWallpaper from '../assets/images/background.png';
 import orbitWallpaper from '../assets/images/wallpaper-orbit.png';
 import meshWallpaper from '../assets/images/wallpaper-mesh.png';
@@ -28,15 +36,48 @@ interface DesktopProps {
   icons: DesktopIcon[];
   onUpdateIconsPositions: (updates: Record<string, { x: number; y: number }>) => void; // Batch update
   onIconDoubleClick: (iconId: string) => void;
+  onOpenApp: (type: string, data?: any) => void;
 }
 
 // Helper for hiding native drag ghost
 const emptyImage = new Image();
 emptyImage.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
-function DesktopComponent({ onDoubleClick, icons, onUpdateIconsPositions, onIconDoubleClick }: DesktopProps) {
+const desktopContextMenu: ContextMenuItem[] = [
+  { type: 'item', labelKey: 'menubar.items.newFolder', label: 'New Folder', action: 'new-folder' },
+  { type: 'item', labelKey: 'menubar.items.paste', label: 'Paste', action: 'paste', disabled: true },
+  { type: 'separator' },
+  { type: 'item', labelKey: 'menubar.items.changeWallpaper', label: 'Change Wallpaper', action: 'change-wallpaper' },
+];
+
+function DesktopComponent({ onDoubleClick, icons, onUpdateIconsPositions, onIconDoubleClick, onOpenApp }: DesktopProps) {
   const { accentColor, reduceMotion, disableShadows, wallpaper } = useAppContext();
-  const { moveNodeById } = useFileSystem();
+  const { moveNodeById, createDirectory, resolvePath } = useFileSystem();
+  const { t } = useI18n();
+
+  // Desktop Context Menu Action Listener
+  useEffect(() => {
+    const handleMenuAction = (e: CustomEvent) => {
+      const { action, appId } = e.detail;
+      if (appId !== 'desktop') return;
+
+      switch (action) {
+        case 'new-folder':
+          createDirectory(resolvePath('~/Desktop'), 'New Folder');
+          break;
+        case 'change-wallpaper':
+          // Open Settings -> Wallpapers section (via event + app open)
+          window.dispatchEvent(new CustomEvent('aurora-open-settings-section', { detail: 'wallpapers' }));
+          onOpenApp('settings');
+          break;
+      }
+    };
+
+    window.addEventListener('app-menu-action', handleMenuAction as EventListener);
+    return () => window.removeEventListener('app-menu-action', handleMenuAction as EventListener);
+  }, [createDirectory, resolvePath, onOpenApp]);
+
+  // Selection State
 
   // Selection State
   const [selectedIcons, setSelectedIcons] = useState<Set<string>>(new Set());
@@ -234,50 +275,57 @@ function DesktopComponent({ onDoubleClick, icons, onUpdateIconsPositions, onIcon
   };
 
   return (
-    <div
-      className="absolute inset-0 w-full h-full bg-cover bg-center transition-[background-image] duration-500"
-      onMouseDown={handleDesktopMouseDown}
-      onDoubleClick={onDoubleClick}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-      style={{
-        backgroundImage: `url(${WALLPAPERS[wallpaper] || WALLPAPERS.default})`,
-      }}
-    >
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none" />
-
-      {/* Selection Box */}
-      {selectionBox && (
+    <ContextMenu>
+      <ContextMenuTrigger asChild>
         <div
-          className="absolute border border-blue-400/50 bg-blue-500/20 z-50 pointer-events-none"
+          className="absolute inset-0 w-full h-full bg-cover bg-center transition-[background-image] duration-500"
+          onMouseDown={handleDesktopMouseDown}
+          onDoubleClick={onDoubleClick}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
           style={{
-            left: Math.min(selectionBox.start.x, selectionBox.current.x),
-            top: Math.min(selectionBox.start.y, selectionBox.current.y),
-            width: Math.abs(selectionBox.current.x - selectionBox.start.x),
-            height: Math.abs(selectionBox.current.y - selectionBox.start.y),
+            backgroundImage: `url(${WALLPAPERS[wallpaper] || WALLPAPERS.default})`,
           }}
-        />
-      )}
+        >
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 opacity-5 pointer-events-none" />
 
-      {/* Desktop Icons */}
-      {icons.map((icon) => (
-        <DesktopIconItem
-          key={icon.id}
-          icon={icon}
-          selected={selectedIcons.has(icon.id)}
-          dragging={draggingIcons.includes(icon.id)}
-          dragDelta={dragDelta}
-          reduceMotion={reduceMotion}
-          disableShadows={disableShadows}
-          accentColor={accentColor}
-          onMouseDown={handleIconMouseDown}
-          onDragStart={handleNativeDragStart}
-          onDragEnd={handleDragEnd}
-          onDoubleClick={onIconDoubleClick}
-        />
-      ))}
-    </div>
+          {/* Selection Box */}
+          {selectionBox && (
+            <div
+              className="absolute border border-blue-400/50 bg-blue-500/20 z-50 pointer-events-none"
+              style={{
+                left: Math.min(selectionBox.start.x, selectionBox.current.x),
+                top: Math.min(selectionBox.start.y, selectionBox.current.y),
+                width: Math.abs(selectionBox.current.x - selectionBox.start.x),
+                height: Math.abs(selectionBox.current.y - selectionBox.start.y),
+              }}
+            />
+          )}
+
+          {/* Desktop Icons */}
+          {icons.map((icon) => (
+            <DesktopIconItem
+              key={icon.id}
+              icon={icon}
+              selected={selectedIcons.has(icon.id)}
+              dragging={draggingIcons.includes(icon.id)}
+              dragDelta={dragDelta}
+              reduceMotion={reduceMotion}
+              disableShadows={disableShadows}
+              accentColor={accentColor}
+              onMouseDown={handleIconMouseDown}
+              onDragStart={handleNativeDragStart}
+              onDragEnd={handleDragEnd}
+              onDoubleClick={onIconDoubleClick}
+            />
+          ))}
+        </div>
+      </ContextMenuTrigger>
+      <ContextMenuContent>
+        {renderContextMenuItems(desktopContextMenu, t, 'desktop', 'desktop')}
+      </ContextMenuContent>
+    </ContextMenu>
   );
 }
 

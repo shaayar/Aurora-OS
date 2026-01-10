@@ -208,7 +208,8 @@ export const ro: TranslationDict = {
         items: {
             newWindow: 'Fereastră Nouă',
             newFolder: 'Dosar Nou',
-            closeWindow: 'Închide Fereastra',
+            changeWallpaper: 'Schimbă imaginea de fundal',
+            closeWindow: 'Închide fereastra',
             undo: 'Anulează',
             redo: 'Refă',
             cut: 'Taie',
@@ -222,6 +223,7 @@ export const ro: TranslationDict = {
             back: 'Înapoi',
             forward: 'Înainte',
             enclosingFolder: 'Dosar Părinte',
+            getInfo: 'Obține informații',
         },
         help: {
             appHelp: 'Ajutor {{appName}}',
@@ -427,8 +429,9 @@ export const ro: TranslationDict = {
     },
     terminal: {
         menu: {
-            newTab: 'Tab Nou',
-            clearScrollback: 'Șterge Istoric',
+            newTab: 'Filă Nouă',
+            clearScrollback: 'Șterge Istoricul',
+            killProcess: 'Omoară procesul',
         },
         help: {
             availableCommands: 'Comenzi disponibile:',
