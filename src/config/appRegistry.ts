@@ -8,7 +8,7 @@ import { Messages, messagesMenuConfig } from '../components/apps/Messages';
 import { Browser, browserMenuConfig } from '../components/apps/Browser';
 import { Terminal as TerminalApp, terminalMenuConfig, terminalContextMenuConfig } from '../components/apps/Terminal';
 import { DevCenter, devCenterMenuConfig } from '../components/apps/DevCenter';
-import { Notepad, notepadMenuConfig, notepadContextMenuConfig } from '../components/apps/Notepad';
+import { Notepad, notepadMenuConfig } from '../components/apps/Notepad';
 
 import { Calendar as CalendarApp, calendarMenuConfig } from '../components/apps/Calendar';
 import { AppStore as AppStoreComponent, appStoreMenuConfig } from '../components/apps/AppStore';
@@ -152,7 +152,6 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
         component: Notepad,
         dockOrder: 4,
         menu: notepadMenuConfig,
-        contextMenu: notepadContextMenuConfig,
         size: 35,
         ramUsage: 70,
     },

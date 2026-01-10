@@ -553,6 +553,7 @@ export const de: TranslationDict = {
     search: {
       noResultsTitle: 'Keine Ergebnisse gefunden',
       noResultsDesc: 'Keine Ergebnisse für "{{query}}" gefunden',
+      resultsTitle: 'Suchergebnisse ({{count}})',
     },
     emptyFolder: 'Dieser Ordner ist leer',
   },
@@ -657,6 +658,12 @@ export const de: TranslationDict = {
   notepad: {
     untitled: 'Unbenannt',
     untitledTab: 'Unbenannt {{index}}',
+    empty: {
+      title: 'Editor',
+      description: 'Erstellen Sie eine neue Datei oder öffnen Sie eine vorhandene, um zu beginnen.',
+      newFile: 'Neue Datei',
+      openFile: 'Datei öffnen',
+    },
     languages: {
       markdown: 'Markdown',
       javascript: 'JavaScript',

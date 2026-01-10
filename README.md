@@ -1,6 +1,6 @@
 # Aurora OS.js
 
-[![Version](https://img.shields.io/badge/Version-v0.8.2-blue)](https://github.com/mental-os/Aurora-OS.js) ![Roadmap Status](<https://img.shields.io/badge/Roadmap-Stage%200%20(OS%20Foundation)-blue>) [![Build (Main)](<https://img.shields.io/github/actions/workflow/status/mental-os/Aurora-OS.js/ci.yml?branch=main&label=Build%20(Main)&logo=github>)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/ci.yml) [![Build (Nightly)](<https://img.shields.io/github/actions/workflow/status/mental-os/Aurora-OS.js/ci.yml?branch=nightly&label=Build%20(Nightly)&logo=github>)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/ci.yml) [![GitHub Pages](https://github.com/mental-os/Aurora-OS.js/actions/workflows/deploy.yml/badge.svg)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/deploy.yml)
+[![Version](https://img.shields.io/badge/Version-v0.8.3-blue)](https://github.com/mental-os/Aurora-OS.js) ![Roadmap Status](<https://img.shields.io/badge/Roadmap-Stage%200%20(OS%20Foundation)-blue>) [![Build (Main)](<https://img.shields.io/github/actions/workflow/status/mental-os/Aurora-OS.js/ci.yml?branch=main&label=Build%20(Main)&logo=github>)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/ci.yml) [![Build (Nightly)](<https://img.shields.io/github/actions/workflow/status/mental-os/Aurora-OS.js/ci.yml?branch=nightly&label=Build%20(Nightly)&logo=github>)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/ci.yml) [![GitHub Pages](https://github.com/mental-os/Aurora-OS.js/actions/workflows/deploy.yml/badge.svg)](https://github.com/mental-os/Aurora-OS.js/actions/workflows/deploy.yml)
 
 ![Social media image for Aurora OS.js hacking simulator game project](.github/openGraph.png)
 
@@ -117,6 +117,7 @@ Or use the [GitHub Pages](https://mental-os.github.io/Aurora-OS.js) (LIVE DEMO)
   debar is aware of the existing folders in user's home directory.
 - **Finder/Desktop**: Context menu copy/paste functionality.
 - **Finder/Desktop**: Improved "Get Info" diagnostic display with rich, internationalized details (Permissions, Owner, Modified, Size).
+- **Notepad**: Opens with an empty state that propts user to open a file, instead of the clasic "first tab already open" - this gives the posibility to close all tabs.
 - **Translation System**: `.scripts/check-i18n.js` script find automatically missing or extra keys in translations as well as all the files in `/src/i18n/locales`. Aditional workflow for translations is added in [TRANSLATION.md](TRANSLATION.md).
 
 ### Fixed
@@ -125,6 +126,8 @@ Or use the [GitHub Pages](https://mental-os.github.io/Aurora-OS.js) (LIVE DEMO)
 - **Finder**: Drag-to-move from one window to another now corectly checks for permissions (applies to Desktop too).
 - **Finder**: Drop highlight issue when it stayed active in some cases.
 - **Finder**: Terminal not passing the correct home path to Finder (eg. `su guest` > `finder ~` should open Finder as guest in `/home/guest`, but it opened in `/home/[user]`).
+- **Notepad**: Tabs now remain active when closing and opening Notepad. Unsaved files prevent the app from closing.
+- **Notepad**: Tabs now remember the mode of each tab (edit / preview) to prevent unwanted preview mode where it is not supported.
 
 ### [View full version history](HISTORY.md)
 

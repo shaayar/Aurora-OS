@@ -1061,13 +1061,15 @@ export function FileManager({ id, initialPath, onOpenApp, owner }: { id: string;
             {searchResults.length === 0 ? (
                 <EmptyState
                     icon={Search}
-                    title={t('fileManager.search.noResultsTitle') || "No results found"}
-                    description={t('fileManager.search.noResultsDesc', { query: searchQuery }) || `No results found for "${searchQuery}"`}
+                    title={t('fileManager.search.noResultsTitle')}
+                    description={t('fileManager.search.noResultsDesc', { query: searchQuery })}
                     className="h-full"
                 />
             ) : (
                 <div className="flex flex-col gap-1 p-2 w-full">
-                  <h3 className="text-white/50 text-xs uppercase font-medium px-2 mb-2 sticky top-0 backdrop-blur-md bg-black/20 z-10 py-2 rounded-lg">Search Results ({searchResults.length})</h3>
+                  <h3 className="text-white/50 text-xs uppercase font-medium px-2 mb-2 sticky top-0 backdrop-blur-md bg-black/20 z-10 py-2 rounded-lg">
+                    {t('fileManager.search.resultsTitle', { count: searchResults.length })}
+                  </h3>
                   <div className="flex flex-col gap-1">
                   {searchResults.map(({ node, path }) => (
                       <button
@@ -1091,7 +1093,7 @@ export function FileManager({ id, initialPath, onOpenApp, owner }: { id: string;
       ) : items.length === 0 ? (
         <EmptyState
           icon={FolderOpen}
-          title={t('fileManager.emptyFolder') || "This folder is empty"}
+          title={t('fileManager.emptyFolder')}
           className="h-full"
         />
       ) : appState.viewMode === 'grid' ? (

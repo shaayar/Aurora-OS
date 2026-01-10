@@ -559,7 +559,8 @@ export const zh: TranslationDict = {
 		},
 		search: {
 			noResultsTitle: '未找到结果',
-			noResultsDesc: '未找到 "{{query}}" 的结果',
+			noResultsDesc: '未找到关于 "{{query}}" 的结果',
+			resultsTitle: '搜索结果 ({{count}})',
 		},
 		emptyFolder: '此文件夹为空',
 	},
@@ -664,6 +665,12 @@ export const zh: TranslationDict = {
 	notepad: {
 		untitled: '未命名',
 		untitledTab: '未命名 {{index}}',
+		empty: {
+			title: '记事本',
+			description: '创建新文件或打开现有文件以开始。',
+			newFile: '新建文件',
+			openFile: '打开文件',
+		},
 		languages: {
 			markdown: 'Markdown',
 			javascript: 'JavaScript',

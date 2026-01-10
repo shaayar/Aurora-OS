@@ -24,6 +24,14 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { AppTemplate } from '@/components/apps/AppTemplate';
 import { useFileSystem } from '@/components/FileSystemContext';
 import { FilePicker } from '@/components/ui/FilePicker';
+import { EmptyState } from '@/components/ui/empty-state';
+import {
+    ContextMenu,
+    ContextMenuContent,
+    ContextMenuItem,
+    ContextMenuSeparator,
+    ContextMenuTrigger
+} from '@/components/ui/context-menu';
 import { notify } from '@/services/notifications';
 
 interface Tab {
@@ -33,11 +41,13 @@ interface Tab {
     content: string;
     isModified: boolean;
     context: string; // Dynamic language/context
+    previewMode?: boolean;
 }
 
 // ... imports
 import { useAppContext } from '@/components/AppContext';
 import { useWindow } from '@/components/WindowContext';
+import { useThemeColors } from '@/hooks/useThemeColors';
 import { getAppStateKey } from '@/utils/memory';
 import { useI18n } from '@/i18n/index';
 
@@ -79,6 +89,7 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
     const { t } = useI18n();
     const { readFile, createFile, writeFile, getNodeAtPath } = useFileSystem();
     const { accentColor, activeUser: desktopUser } = useAppContext();
+    const { titleBarBackground, blurStyle } = useThemeColors();
     const activeUser = owner || desktopUser;
     const windowContext = useWindow();
 
@@ -97,50 +108,41 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
         return translated === key ? unknown : translated;
     };
 
-    const getUntitledTabName = (index: number) => t('notepad.untitledTab', { index });
-    const createDefaultTab = (index: number): Tab => ({
-        id: crypto.randomUUID(),
-        name: getUntitledTabName(index),
-        content: '',
-        isModified: false,
-        context: 'markdown'
-    });
+    const getUntitledTabName = useCallback((index: number) => t('notepad.untitledTab', { index }), [t]);
 
     // State
     const [tabs, setTabs] = useState<Tab[]>(() => {
         // Initializer for lazy state loading
         try {
-            if (!activeUser) return [{ id: '1', name: getUntitledTabName(1), content: '', isModified: false, context: 'markdown' }];
+            if (!activeUser) return [];
             const key = getAppStateKey('notepad', activeUser);
             const saved = localStorage.getItem(key);
             if (saved) {
                 const parsed = JSON.parse(saved);
-                // Validate parsed data structure significantly? 
-                // For now, assume it's correct if it exists.
-                if (Array.isArray(parsed.tabs) && parsed.tabs.length > 0) {
+                if (Array.isArray(parsed.tabs)) {
                     return parsed.tabs;
                 }
             }
         } catch (e) {
             console.warn(e);
         }
-        return [{ id: '1', name: getUntitledTabName(1), content: '', isModified: false, context: 'markdown' }];
+        return [];
     });
 
     // We also need to restore activeTabId
-    const [activeTabId, setActiveTabId] = useState(() => {
+    const [activeTabId, setActiveTabId] = useState<string | null>(() => {
         try {
-            if (!activeUser) return '1';
+            if (!activeUser) return null;
             const key = getAppStateKey('notepad', activeUser);
             const saved = localStorage.getItem(key);
             if (saved) {
                 const parsed = JSON.parse(saved);
-                return parsed.activeTabId || '1';
+                return parsed.activeTabId || null;
             }
         } catch {
-            return '1';
+            return null;
         }
-        return '1';
+        return null;
     });
 
     // Persist State Effect
@@ -159,13 +161,13 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
         return () => clearTimeout(saveState);
     }, [tabs, activeTabId, activeUser]);
 
-    const [isPreviewMode, setIsPreviewMode] = useState(false);
     const [filePickerMode, setFilePickerMode] = useState<'open' | 'save' | null>(null);
 
     // State for Unsaved Changes Dialog
     const [pendingCloseTabId, setPendingCloseTabId] = useState<string | null>(null);
 
     const activeTab = tabs.find(t => t.id === activeTabId) || tabs[0];
+    const isPreviewMode = activeTab?.previewMode && (activeTab.context === 'markdown' || activeTab.context === 'markup');
 
     // -- Window Close Interception --
     // Using Ref for tabs to avoid effect re-running on every keystroke
@@ -223,7 +225,8 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
                         path,
                         content,
                         isModified: false,
-                        context
+                        context,
+                        previewMode: false
                     };
 
                     // If the only tab was the initial blank "Untitled 1" and it was empty/unmodified, replace it.
@@ -243,28 +246,23 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
     }, [windowContext?.data, initialPath, activeUser, readFile, getNodeAtPath]);
 
     // -- Tab Management --
-    const handleNewTab = () => {
+    const handleNewTab = useCallback(() => {
         const newId = crypto.randomUUID();
         const newName = getUntitledTabName(tabs.length + 1);
-        setTabs([...tabs, { id: newId, name: newName, content: '', isModified: false, context: 'markdown' }]);
+        setTabs(prev => [...prev, { id: newId, name: newName, content: '', isModified: false, context: 'markdown', previewMode: false }]);
         setActiveTabId(newId);
-    };
+    }, [tabs.length, getUntitledTabName]);
 
-    const forceCloseTab = (id: string) => {
-        if (tabs.length === 1) {
-            setTabs([createDefaultTab(1)]);
-            setActiveTabId(tabs[0].id); // This will update in next render actually, but logic holds
-        } else {
-            const newTabs = tabs.filter(t => t.id !== id);
-            setTabs(newTabs);
-            if (activeTabId === id) {
-                setActiveTabId(newTabs[newTabs.length - 1].id);
-            }
+    const forceCloseTab = useCallback((id: string) => {
+        const newTabs = tabs.filter(t => t.id !== id);
+        setTabs(newTabs);
+        if (activeTabId === id) {
+            setActiveTabId(newTabs.length > 0 ? newTabs[newTabs.length - 1].id : null);
         }
         setPendingCloseTabId(null);
-    };
+    }, [tabs, activeTabId, setTabs, setActiveTabId, setPendingCloseTabId]);
 
-    const handleCloseTab = (id: string, e: React.MouseEvent) => {
+    const handleCloseTab = useCallback((id: string, e: React.MouseEvent | { stopPropagation: () => void }) => {
         e.stopPropagation();
         const tabToClose = tabs.find(t => t.id === id);
         if (!tabToClose) return;
@@ -275,7 +273,7 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
         } else {
             forceCloseTab(id);
         }
-    };
+    }, [tabs, forceCloseTab, setActiveTabId, setPendingCloseTabId]);
 
     const handleContentChange = useCallback((newContent: string) => {
         setTabs(prevTabs => prevTabs.map(t =>
@@ -298,7 +296,7 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
                 const context = extensionToLanguage(extension);
 
                 // Check if we should replace current empty tab or open new
-                if (activeTab.content === '' && !activeTab.path && !activeTab.isModified) {
+                if (activeTab && activeTab.content === '' && !activeTab.path && !activeTab.isModified) {
                     setTabs(tabs.map(t =>
                         t.id === activeTabId
                             ? { ...t, name, path, content, isModified: false, context }
@@ -306,13 +304,14 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
                     ));
                 } else {
                     const newId = crypto.randomUUID();
-                    setTabs([...tabs, { id: newId, name, path, content, isModified: false, context }]);
+                    setTabs([...tabs, { id: newId, name, path, content, isModified: false, context, previewMode: false }]);
                     setActiveTabId(newId);
                 }
             } else {
                 notify.system('error', 'Notepad', t('notepad.toasts.failedToReadFile'), t('notifications.subtitles.error'));
             }
         } else if (filePickerMode === 'save') {
+            if (!activeTab) return;
             // Save logic
             // Try updating first (overwrite), then create if distinct
             let success = writeFile(path, activeTab.content, activeUser);
@@ -344,6 +343,7 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
     };
 
     const handleSave = useCallback(() => {
+        if (!activeTab) return false;
         if (activeTab.path) {
             // Quick Save using writeFile (updates existing)
             const success = writeFile(activeTab.path, activeTab.content, activeUser);
@@ -381,16 +381,14 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
         // We should clear the pending close? Or wait?
         // Standard OS behavior: If Save As dialog opens, the "Close" action is paused/cancelled until save is done.
         // So we just close the dialog. If they complete save, they can close manually?
-        // Better: We try to save. If `activeTab.path` exists, we confirm save and THEN close.
-
-        if (activeTab.path) {
+        if (activeTab?.path) {
             // It will save synchronously in handleSave
             // We can force close after?
             // Actually handleSave updates state. 
             // We'll trust the user to close after saving, or we can try to chain it.
             // Let's just dismiss dialog and save.
             setPendingCloseTabId(null);
-            if (saved) { // If it was a quick save and successful, then close the tab
+            if (saved && activeTabId) { // If it was a quick save and successful, then close the tab
                 forceCloseTab(activeTabId);
             }
         } else {
@@ -408,7 +406,8 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
     };
 
     // -- Editor Helpers --
-    const insertMarkdown = (syntax: string) => {
+    const insertMarkdown = useCallback((syntax: string) => {
+        if (!activeTab) return;
         const textarea = document.querySelector('.prism-editor textarea') as HTMLTextAreaElement;
         if (!textarea) return;
 
@@ -422,10 +421,10 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
         let newContent = '';
 
         switch (syntax) {
-            case 'bold': newContent = `${before}** ${selection || 'text'}** ${after} `; break;
-            case 'italic': newContent = `${before}_${selection || 'text'}_${after} `; break;
-            case 'list': newContent = `${before} \n - ${selection}${after} `; break;
-            case 'h1': newContent = `${before} \n# ${selection}${after} `; break;
+            case 'bold': newContent = `${before}**${selection || 'text'}**${after}`; break;
+            case 'italic': newContent = `${before}_${selection || 'text'}_${after}`; break;
+            case 'list': newContent = `${before}\n- ${selection}${after}`; break;
+            case 'h1': newContent = `${before}\n# ${selection}${after}`; break;
             default: return;
         }
 
@@ -433,18 +432,32 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
         setTimeout(() => {
             textarea.focus();
         }, 0);
-    };
+    }, [activeTab, handleContentChange]);
 
-    // Highlight function for Prism
-    const highlight = useCallback((code: string) => {
-        const lang = activeTab.context;
-        if (lang === 'txt' || !Prism.languages[lang]) {
-            return code;
-        }
-        return Prism.highlight(code, Prism.languages[lang], lang);
-    }, [activeTab.context]);
 
     // -- Context Menu Actions --
+    const handleCopy = useCallback(() => {
+        document.execCommand('copy');
+    }, []);
+
+    const handleCut = useCallback(() => {
+        document.execCommand('cut');
+    }, []);
+
+    const handlePaste = useCallback(async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            if (text && activeTabId) {
+                // We need to inject text at cursor. For Editor, we could potentially use its inner state but
+                // easiest is to let the browser handle standard paste if possible, but radix context menu
+                // intercepts it. We'll use a simple approach for now.
+                document.execCommand('insertText', false, text);
+            }
+        } catch (err) {
+            console.error('Failed to paste:', err);
+        }
+    }, [activeTabId]);
+
     useEffect(() => {
         const handleMenuAction = async (e: Event) => {
             const customEvent = e as CustomEvent;
@@ -453,43 +466,54 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
             // ... (rest is same, but we need to ensure handleSave/handleContentChange are stable or ignored)
             // Actually, suppressing dependency warning is easier if acceptable, or wrapping functions.
             // Let's wrap functions in next steps if needed, but for now fixing the event type error.
+            if (action === 'new') {
+                handleNewTab();
+                return;
+            }
+
+            if (action === 'open') {
+                setFilePickerMode('open');
+                return;
+            }
+
+            if (!activeTab) return;
 
             switch (action) {
-                case 'save':
-                    handleSave();
+                case 'close-tab':
+                    if (activeTabId) {
+                        handleCloseTab(activeTabId, { stopPropagation: () => { } });
+                    }
                     break;
                 case 'copy':
-                    document.execCommand('copy');
+                    handleCopy();
                     break;
                 case 'paste':
-                     try {
-                        const text = await navigator.clipboard.readText();
-                        if (!text) return;
-                        
-                        const textarea = document.querySelector('.prism-editor textarea') as HTMLTextAreaElement;
-                        if (!textarea) return;
-
-                        const start = textarea.selectionStart;
-                        const end = textarea.selectionEnd;
-                        const current = activeTab.content;
-                        const validStart = start !== null ? start : current.length;
-                        const validEnd = end !== null ? end : current.length;
-
-                        const before = current.substring(0, validStart);
-                        const after = current.substring(validEnd);
-                        const newContent = before + text + after;
-
-                        handleContentChange(newContent);
-                    } catch (err) {
-                        console.error('Paste failed', err);
-                    }
+                    handlePaste();
+                    break;
+                case 'format-bold':
+                    insertMarkdown('bold');
+                    break;
+                case 'format-italic':
+                    insertMarkdown('italic');
+                    break;
+                case 'format-list':
+                    insertMarkdown('list');
+                    break;
+                case 'format-h1':
+                    insertMarkdown('h1');
+                    break;
+                case 'toggle-preview':
+                    // Update tab state
+                    setTabs(prevTabs => prevTabs.map(t => 
+                        t.id === activeTabId ? { ...t, previewMode: !t.previewMode } : t
+                    ));
                     break;
             }
         };
 
         window.addEventListener('app-menu-action', handleMenuAction);
         return () => window.removeEventListener('app-menu-action', handleMenuAction);
-    }, [activeTab, handleSave, handleContentChange, id]);
+    }, [activeTab, activeTabId, handleSave, handleContentChange, handleNewTab, handleCloseTab, id, handleCopy, handlePaste, insertMarkdown]);
 
     return (
         <div className="relative h-full w-full">
@@ -498,7 +522,7 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
                 content={
                     <div className="h-full flex flex-col relative">
                         {/* Custom Toolbar */}
-                        <div className="flex flex-col w-full border-b border-white/10 backdrop-blur-md">
+                        <div className="flex flex-col w-full border-b border-white/10" style={{ background: titleBarBackground, ...blurStyle }}>
                             {/* Tab Bar */}
                             <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pt-2 px-2">
                                 {tabs.map(tab => (
@@ -524,7 +548,7 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
                                         </span>
                                         <button
                                             onClick={(e) => handleCloseTab(tab.id, e)}
-                                            className={`opacity-0 group-hover:opacity-100 hover:bg-white/10 rounded-full p-0.5 transition-all ${tabs.length === 1 && !tab.isModified ? 'hidden' : ''}`}
+                                            className="opacity-0 group-hover:opacity-100 hover:bg-white/10 rounded-full p-0.5 transition-all"
                                         >
                                             <X className="w-3 h-3 text-white/70 hover:text-white" />
                                         </button>
@@ -539,7 +563,7 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
                             </div>
 
                             {/* Action Bar */}
-                            <div className="flex items-center justify-between p-2 border-t border-white/5 bg-white/5">
+                            <div className="flex items-center justify-between p-2 border-t border-white/5">
                                 <div className="flex items-center gap-1">
                                     <button
                                         onClick={() => setFilePickerMode('open')}
@@ -550,15 +574,16 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
                                     </button>
                                     <button
                                         onClick={handleSave}
-                                        style={{ color: activeTab.isModified ? accentColor : undefined }}
-                                        className={`p-1.5 hover:bg-white/10 rounded-md transition-colors flex items-center gap-2 ${activeTab.isModified ? '' : 'text-white/70 hover:text-white'}`}
+                                        style={{ color: (activeTab?.isModified) ? accentColor : undefined }}
+                                        disabled={!activeTab}
+                                        className={`p-1.5 hover:bg-white/10 rounded-md transition-colors flex items-center gap-2 ${(activeTab?.isModified) ? '' : 'text-white/70 hover:text-white'} disabled:opacity-20 disabled:cursor-not-allowed`}
                                         title={t('notepad.actions.saveFile')}
                                     >
                                         <Save className="w-4 h-4" />
                                     </button>
                                     <div className="w-px h-4 bg-white/10 mx-2" />
 
-                                    {!isPreviewMode && activeTab.context === 'markdown' && (
+                                    {!isPreviewMode && activeTab?.context === 'markdown' && (
                                         <>
                                             <button onClick={() => insertMarkdown('bold')} className="p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-md" title={t('notepad.actions.bold')}>
                                                 <Bold className="w-4 h-4" />
@@ -576,9 +601,13 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
                                     )}
                                 </div>
 
-                                {(activeTab.context === 'markdown' || activeTab.context === 'markup') && (
+                                {activeTab && (activeTab.context === 'markdown' || activeTab.context === 'markup') && (
                                     <button
-                                        onClick={() => setIsPreviewMode(!isPreviewMode)}
+                                        onClick={() => {
+                                            setTabs(prevTabs => prevTabs.map(t => 
+                                                t.id === activeTabId ? { ...t, previewMode: !t.previewMode } : t
+                                            ));
+                                        }}
                                         style={{ backgroundColor: isPreviewMode ? accentColor : undefined }}
                                         className={`
                                         flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-colors
@@ -603,173 +632,237 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
                             </div>
                         </div>
 
-                        {/* Editor / Preview Area */}
-                        {isPreviewMode ? (
-                            activeTab.context === 'markdown' ? (
-                                <div className="flex-1 overflow-y-auto p-8 text-white">
-                                    <ReactMarkdown
-                                        remarkPlugins={[remarkGfm]}
-                                        components={{
-                                            h1: ({ node: _node, ...props }) => <h1 className="text-3xl font-bold mb-4 border-b border-white/20 pb-2" style={{ color: accentColor }} {...props} />,
-                                            h2: ({ node: _node, ...props }) => <h2 className="text-2xl font-bold mb-3 border-b border-white/10 pb-1" style={{ color: accentColor }} {...props} />,
-                                            h3: ({ node: _node, ...props }) => <h3 className="text-xl font-bold mb-2" style={{ color: accentColor }} {...props} />,
-                                            p: ({ node: _node, ...props }) => <p className="mb-4 text-white/90 leading-relaxed" {...props} />,
-                                            ul: ({ node: _node, ...props }) => <ul className="list-disc pl-6 mb-4 space-y-1" {...props} />,
-                                            ol: ({ node: _node, ...props }) => <ol className="list-decimal pl-6 mb-4 space-y-1" {...props} />,
-                                            li: ({ node: _node, ...props }) => <li className="text-white/90" {...props} />,
-                                            blockquote: ({ node: _node, ...props }) => <blockquote className="border-l-4 pl-4 italic my-4 text-white/70" style={{ borderColor: accentColor }} {...props} />,
-                                            code: ({ node: _node, className, children, ...props }) => {
-                                                const match = /language-(\w+)/.exec(className || '')
-                                                return match ? (
-                                                    <div className="rounded-md overflow-hidden my-4 border border-white/10 bg-black/30">
-                                                        <div className="px-3 py-1 bg-white/5 border-b border-white/5 text-xs text-white/50">{match[1]}</div>
-                                                        <pre className="p-3 overflow-x-auto text-sm font-mono text-white/90 m-0">
-                                                            <code className={className} {...props}>{children}</code>
-                                                        </pre>
-                                                    </div>
-                                                ) : (
-                                                    <code
-                                                        className="rounded px-1.5 py-0.5 text-sm font-mono font-medium"
-                                                        style={{
-                                                            backgroundColor: `${accentColor}20`,
-                                                            color: accentColor
-                                                        }}
-                                                        {...props}
-                                                    >
-                                                        {children}
-                                                    </code>
-                                                )
-                                            },
-                                            a: ({ node: _node, ...props }) => <a className="text-blue-400 hover:underline" style={{ color: accentColor }} {...props} />,
-                                        }}
-                                    >
-                                        {activeTab.content}
-                                    </ReactMarkdown>
-                                </div>
-                            ) : (
-                                <div className="flex-1 overflow-hidden">
-                                    <iframe
-                                        srcDoc={activeTab.content}
-                                        title={t('notepad.preview.htmlPreviewTitle')}
-                                        sandbox="allow-scripts"
-                                        className="w-full h-full border-none bg-white"
-                                    />
-                                </div>
-                            )
-                        ) : (
-                            <div className="flex-1 overflow-y-auto relative font-mono text-sm prism-editor cursor-text text-white caret-white" onClick={() => {
-                                // Focus helper
-                                const textarea = document.querySelector('.prism-editor textarea') as HTMLElement;
-                                textarea?.focus();
-                            }}>
-                                <Editor
-                                    value={activeTab.content}
-                                    onValueChange={handleContentChange}
-                                    highlight={highlight}
-                                    padding={24}
-                                    className="min-h-full font-mono text-[14px]"
-                                    textareaClassName="focus:outline-none text-white"
-                                    style={{
-                                        fontFamily: '"Fira Code", "Fira Mono", monospace',
-                                        fontSize: 14,
-                                        backgroundColor: 'transparent',
-                                        minHeight: '100%',
-                                        color: '#f8f8f2', // Ensure text is light
-                                        lineHeight: '1.5',
-                                    }}
+                        {tabs.length === 0 ? (
+                            <div className="flex-1 flex items-center justify-center">
+                                <EmptyState
+                                    icon={FileText}
+                                    title={t('notepad.empty.title')}
+                                    description={t('notepad.empty.description')}
+                                    action={
+                                        <div className="flex gap-3">
+                                            <button
+                                                onClick={handleNewTab}
+                                                className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white text-sm transition-all flex items-center gap-2"
+                                            >
+                                                <Plus className="w-4 h-4" />
+                                                {t('notepad.empty.newFile')}
+                                            </button>
+                                            <button
+                                                onClick={() => setFilePickerMode('open')}
+                                                style={{ backgroundColor: accentColor }}
+                                                className="px-4 py-2 rounded-lg text-white text-sm transition-all flex items-center gap-2 hover:brightness-110"
+                                            >
+                                                <FolderOpen className="w-4 h-4" />
+                                                {t('notepad.empty.openFile')}
+                                            </button>
+                                        </div>
+                                    }
                                 />
                             </div>
+                        ) : activeTab && (
+                            isPreviewMode ? (
+                                activeTab.context === 'markdown' ? (
+                                    <ContextMenu>
+                                        <ContextMenuTrigger asChild>
+                                            <div className="flex-1 overflow-auto p-6! prose prose-invert max-w-none prose-pre:bg-[#0D0D0D]! prose-pre:p-6!">
+                                                <ReactMarkdown
+                                                    remarkPlugins={[remarkGfm]}
+                                                    components={{
+                                                        h1: ({ node: _node, ...props }) => <h1 className="text-3xl font-bold mb-6 pb-2 border-b border-white/10" style={{ color: accentColor }} {...props} />,
+                                                        h2: ({ node: _node, ...props }) => <h2 className="text-2xl font-bold mb-4 mt-8" style={{ color: accentColor }} {...props} />,
+                                                        h3: ({ node: _node, ...props }) => <h3 className="text-xl font-bold mb-3 mt-6" style={{ color: accentColor }} {...props} />,
+                                                        p: ({ node: _node, ...props }) => <p className="mb-4 text-white/80 leading-relaxed" {...props} />,
+                                                        ul: ({ node: _node, ...props }) => <ul className="list-disc pl-6 mb-4 space-y-2" {...props} />,
+                                                        ol: ({ node: _node, ...props }) => <ol className="list-decimal pl-6 mb-4 space-y-2" {...props} />,
+                                                        li: ({ node: _node, ...props }) => <li className="text-white/80" {...props} />,
+                                                        blockquote: ({ node: _node, ...props }) => <blockquote className="border-l-4 border-white/20 pl-4 italic my-6 text-white/60" {...props} />,
+                                                        code: ({ node: _node, className, children, ...props }) => {
+                                                            const match = /language-(\w+)/.exec(className || '');
+                                                            return match ? (
+                                                                <div className="relative group my-6">
+                                                                    <div className="absolute top-0 right-0 px-3 py-1 text-[10px] text-white/30 font-mono bg-white/5 rounded-bl-lg uppercase">
+                                                                        {match[1]}
+                                                                    </div>
+                                                                    <pre className="bg-[#0D0D0D]! p-6! rounded-xl border border-white/5 overflow-x-auto">
+                                                                        <code className={className} {...props}>
+                                                                            {children}
+                                                                        </code>
+                                                                    </pre>
+                                                                </div>
+                                                            ) : (
+                                                                <code
+                                                                    className="rounded px-1.5 py-0.5 text-sm font-mono font-medium"
+                                                                    style={{
+                                                                        backgroundColor: `${accentColor}20`,
+                                                                        color: accentColor
+                                                                    }}
+                                                                    {...props}
+                                                                >
+                                                                    {children}
+                                                                </code>
+                                                            )
+                                                        },
+                                                        a: ({ node: _node, ...props }) => <a className="text-blue-400 hover:underline" style={{ color: accentColor }} {...props} />,
+                                                    }}
+                                                >
+                                                    {activeTab.content}
+                                                </ReactMarkdown>
+                                            </div>
+                                        </ContextMenuTrigger>
+                                        <ContextMenuContent>
+                                            <ContextMenuItem onClick={handleCopy}>
+                                                <div className="flex items-center gap-2">
+                                                    <FileText className="w-4 h-4" />
+                                                    {t('menubar.items.copy')}
+                                                </div>
+                                            </ContextMenuItem>
+                                        </ContextMenuContent>
+                                    </ContextMenu>
+                                ) : (
+                                    <div className="flex-1 overflow-hidden">
+                                        <iframe
+                                            srcDoc={activeTab.content}
+                                            title={t('notepad.preview.htmlPreviewTitle')}
+                                            sandbox="allow-scripts"
+                                            className="w-full h-full border-none bg-white"
+                                        />
+                                    </div>
+                                )
+                            ) : (
+                                <div className="flex-1 overflow-y-auto relative font-mono text-sm prism-editor cursor-text text-white caret-white" onClick={() => {
+                                    // Focus helper
+                                    const textarea = document.querySelector('.prism-editor textarea') as HTMLElement;
+                                    textarea?.focus();
+                                }}>
+                                    <ContextMenu>
+                                        <ContextMenuTrigger asChild>
+                                            <div className="flex-1 flex flex-col min-h-0">
+                                                <Editor
+                                                    value={activeTab.content}
+                                                    onValueChange={code => {
+                                                        const newTabs = tabs.map(t =>
+                                                            t.id === activeTabId ? { ...t, content: code, isModified: true } : t
+                                                        );
+                                                        setTabs(newTabs);
+                                                    }}
+                                                    highlight={code => Prism.highlight(code, Prism.languages[activeTab.context] || Prism.languages.clike, activeTab.context)}
+                                                    padding={20}
+                                                    style={{
+                                                        fontFamily: '"Fira Code", "Fira Mono", monospace',
+                                                        fontSize: 14,
+                                                        minHeight: '100%',
+                                                    }}
+                                                    className="flex-1 focus:outline-none focus-within:outline-none selection:bg-white/20"
+                                                />
+                                            </div>
+                                        </ContextMenuTrigger>
+                                        <ContextMenuContent>
+                                            <ContextMenuItem onClick={handleCopy}>
+                                                {t('menubar.items.copy')}
+                                            </ContextMenuItem>
+                                            <ContextMenuItem onClick={handleCut}>
+                                                {t('menubar.items.cut')}
+                                            </ContextMenuItem>
+                                            <ContextMenuSeparator />
+                                            <ContextMenuItem onClick={handlePaste}>
+                                                {t('menubar.items.paste')}
+                                            </ContextMenuItem>
+                                        </ContextMenuContent>
+                                    </ContextMenu>
+                                </div>
+                            )
                         )}
 
-                        {/* Status Bar */}
-                        <div className="h-6 border-t border-white/5 flex items-center justify-between px-3 text-[10px] text-white/30 select-none bg-white/5">
-                            <div className="flex gap-4">
-                                <span>{t('notepad.status.chars', { count: activeTab.content.length })}</span>
-                                <span>{t('notepad.status.lines', { count: activeTab.content.split('\n').length })}</span>
-                            </div>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <div
-                                        className="font-mono hover:text-white cursor-pointer transition-colors select-none flex items-center gap-1"
-                                        style={{
-                                            color: 'rgba(255, 255, 255, 0.5)'
-                                        }}
-                                        title={t('notepad.contextSwitcher.title')}
-                                    >
-                                        {getLanguageDisplayName(activeTab.context)}
-                                        <ChevronsUpDown className="size-3 opacity-50" />
-                                    </div>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    className="w-[200px] p-0 z-10001"
-                                    align="end"
-                                    style={{
-                                        background: 'rgba(28, 28, 30, 0.95)',
-                                        backdropFilter: 'blur(20px)',
-                                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
-                                    }}
-                                >
-                                    <Command className="bg-transparent text-white">
-                                        <CommandInput
-                                            placeholder={t('notepad.contextSwitcher.searchPlaceholder')}
-                                            className="h-8 text-[11px] border-b border-white/10"
+                        {activeTab && (
+                            <div className="h-6 border-t border-white/5 flex items-center justify-between px-3 text-[10px] text-white/30 select-none bg-white/5">
+                                <div className="flex gap-4">
+                                    <span>{t('notepad.status.chars', { count: activeTab.content.length })}</span>
+                                    <span>{t('notepad.status.lines', { count: activeTab.content.split('\n').length })}</span>
+                                </div>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <div
+                                            className="font-mono hover:text-white cursor-pointer transition-colors select-none flex items-center gap-1"
                                             style={{
-                                                color: 'white',
-                                                caretColor: accentColor
+                                                color: 'rgba(255, 255, 255, 0.5)'
                                             }}
-                                        />
-                                        <CommandList className="max-h-[200px]">
-                                            <CommandEmpty className="text-[11px] py-2 text-white/40">{t('notepad.contextSwitcher.noLanguageFound')}</CommandEmpty>
-                                            <CommandGroup>
-                                                {supportedLanguages.map((lang) => (
-                                                    <CommandItem
-                                                        key={lang.value}
-                                                        value={lang.value}
-                                                        onSelect={(currentValue) => {
-                                                            setTabs(tabs.map(t =>
-                                                                t.id === activeTabId
-                                                                    ? { ...t, context: currentValue }
-                                                                    : t
-                                                            ));
-                                                            notify.system('success', 'Notepad', t('notepad.toasts.switchedTo', { language: lang.label }), t('notifications.subtitles.ui'));
-                                                        }}
-                                                        className="text-[11px] cursor-pointer transition-all duration-150"
-                                                        style={{
-                                                            color: activeTab.context === lang.value ? accentColor : 'rgba(255, 255, 255, 0.7)',
-                                                            backgroundColor: activeTab.context === lang.value ? `${accentColor}15` : 'transparent'
-                                                        }}
-                                                        onMouseEnter={(e) => {
-                                                            if (activeTab.context !== lang.value) {
-                                                                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                                                                e.currentTarget.style.color = 'white';
-                                                            }
-                                                        }}
-                                                        onMouseLeave={(e) => {
-                                                            if (activeTab.context !== lang.value) {
-                                                                e.currentTarget.style.backgroundColor = 'transparent';
-                                                                e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
-                                                            }
-                                                        }}
-                                                    >
-                                                        <Check
-                                                            className={cn(
-                                                                "mr-2 h-3 w-3 transition-opacity",
-                                                                activeTab.context === lang.value ? "opacity-100" : "opacity-0"
-                                                            )}
-                                                            style={{
-                                                                color: accentColor
+                                            title={t('notepad.contextSwitcher.title')}
+                                        >
+                                            {getLanguageDisplayName(activeTab.context)}
+                                            <ChevronsUpDown className="size-3 opacity-50" />
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        className="w-[200px] p-0 z-10001"
+                                        align="end"
+                                        style={{
+                                            background: 'rgba(28, 28, 30, 0.95)',
+                                            backdropFilter: 'blur(20px)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
+                                        }}
+                                    >
+                                        <Command className="bg-transparent text-white">
+                                            <CommandInput
+                                                placeholder={t('notepad.contextSwitcher.searchPlaceholder')}
+                                                className="h-8 text-[11px] border-b border-white/10"
+                                                style={{
+                                                    color: 'white',
+                                                    caretColor: accentColor
+                                                }}
+                                            />
+                                            <CommandList className="max-h-[200px]">
+                                                <CommandEmpty className="text-[11px] py-2 text-white/40">{t('notepad.contextSwitcher.noLanguageFound')}</CommandEmpty>
+                                                <CommandGroup>
+                                                    {supportedLanguages.map((lang) => (
+                                                        <CommandItem
+                                                            key={lang.value}
+                                                            value={lang.value}
+                                                            onSelect={(currentValue) => {
+                                                                setTabs(tabs.map(t =>
+                                                                    t.id === activeTabId
+                                                                        ? { ...t, context: currentValue }
+                                                                        : t
+                                                                ));
+                                                                notify.system('success', 'Notepad', t('notepad.toasts.switchedTo', { language: lang.label }), t('notifications.subtitles.ui'));
                                                             }}
-                                                        />
-                                                        {lang.label}
-                                                    </CommandItem>
-                                                ))}
-                                            </CommandGroup>
-                                        </CommandList>
-                                    </Command>
-                                </PopoverContent>
-                            </Popover>
-                        </div>
+                                                            className="text-[11px] cursor-pointer transition-all duration-150"
+                                                            style={{
+                                                                color: activeTab.context === lang.value ? accentColor : 'rgba(255, 255, 255, 0.7)',
+                                                                backgroundColor: activeTab.context === lang.value ? `${accentColor}15` : 'transparent'
+                                                            }}
+                                                            onMouseEnter={(e) => {
+                                                                if (activeTab.context !== lang.value) {
+                                                                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                                                                    e.currentTarget.style.color = 'white';
+                                                                }
+                                                            }}
+                                                            onMouseLeave={(e) => {
+                                                                if (activeTab.context !== lang.value) {
+                                                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                                                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)';
+                                                                }
+                                                            }}
+                                                        >
+                                                            <Check
+                                                                className={cn(
+                                                                    "mr-2 h-3 w-3 transition-opacity",
+                                                                    activeTab.context === lang.value ? "opacity-100" : "opacity-0"
+                                                                )}
+                                                                style={{
+                                                                    color: accentColor
+                                                                }}
+                                                            />
+                                                            {lang.label}
+                                                        </CommandItem>
+                                                    ))}
+                                                </CommandGroup>
+                                            </CommandList>
+                                        </Command>
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
+                        )}
                     </div>
                 }
             />
@@ -779,11 +872,11 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
                     mode={filePickerMode}
                     onClose={() => setFilePickerMode(null)}
                     onSelect={handleFileSelect}
-                    defaultPath={activeTab.path ? activeTab.path.substring(0, activeTab.path.lastIndexOf('/')) : undefined}
+                    defaultPath={(activeTab && activeTab.path) ? activeTab.path.substring(0, activeTab.path.lastIndexOf('/')) : undefined}
                     extension={
                         // If we are in txt mode, suggest .txt. If MD, suggest .md
                         // FilePicker handles extension as default/fallback.
-                        activeTab.context === 'txt' ? '.txt' : (activeTab.context === 'markdown' ? '.md' : `.${activeTab.context}`)
+                        activeTab ? (activeTab.context === 'txt' ? '.txt' : (activeTab.context === 'markdown' ? '.md' : `.${activeTab.context}`)) : '.txt'
                     }
                     owner={activeUser}
                 />
@@ -818,16 +911,7 @@ export function Notepad({ id, owner, initialPath }: NotepadProps) {
         </div>
     );
 }
-import { AppMenuConfig, ContextMenuConfig } from '@/types';
-
-export const notepadContextMenuConfig: ContextMenuConfig = {
-    items: [
-        { type: 'item', labelKey: 'menubar.items.save', label: 'Save', action: 'save' },
-        { type: 'separator' },
-        { type: 'item', labelKey: 'menubar.items.copy', label: 'Copy', action: 'copy' },
-        { type: 'item', labelKey: 'menubar.items.paste', label: 'Paste', action: 'paste' },
-    ]
-};
+import { AppMenuConfig } from '@/types';
 
 export const notepadMenuConfig: AppMenuConfig = {
     menus: ['File', 'Edit', 'Format', 'View', 'Window', 'Help'],

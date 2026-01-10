@@ -617,6 +617,7 @@ export const ro: TranslationDict = {
         search: {
             noResultsTitle: 'Niciun rezultat găsit',
             noResultsDesc: 'Niciun rezultat găsit pentru "{{query}}"',
+            resultsTitle: 'Rezultate căutare ({{count}})',
         },
         emptyFolder: 'Acest folder este gol',
     },
@@ -721,7 +722,13 @@ export const ro: TranslationDict = {
     notepad: {
         untitled: 'Fără titlu',
         untitledTab: 'Fără titlu {{index}}',
-        languages: {
+    empty: {
+      title: 'Notepad',
+      description: 'Creează un fișier nou sau deschide unul existent pentru a începe.',
+      newFile: 'Fișier Nou',
+      openFile: 'Deschide Fișier',
+    },
+    languages: {
             markdown: 'Markdown',
             javascript: 'JavaScript',
             typescript: 'TypeScript',
