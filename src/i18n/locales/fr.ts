@@ -556,8 +556,10 @@ export const fr: TranslationDict = {
     },
   },
   filePicker: {
-    openFile: 'Ouvrir un fichier',
-    saveFile: 'Enregistrer un fichier',
+    openFile: 'Ouvrir le fichier',
+    openFileDescription: 'Sélectionnez un fichier à ouvrir depuis le système de fichiers',
+    saveFile: 'Enregistrer le fichier',
+    saveFileDescription: 'Choisissez un emplacement et un nom pour enregistrer votre fichier',
     emptyFolder: 'Ce dossier est vide',
     nameLabel: 'Nom :',
     untitledPlaceholder: 'Sans titre',

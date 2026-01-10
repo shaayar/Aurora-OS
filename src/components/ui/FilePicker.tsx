@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Dialog, DialogContent } from './dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from './dialog';
 import { Button } from './button';
 import { Input } from './input';
 import { useFileSystem, FileNode } from '@/components/FileSystemContext';
@@ -129,7 +129,13 @@ export function FilePicker({ isOpen, onClose, onSelect, mode, title, defaultPath
                     background: windowBackground,
                     ...blurStyle
                 }}
-            >
+            >                <DialogTitle className="sr-only">
+                    {title || (mode === 'open' ? t('filePicker.openFile') : t('filePicker.saveFile'))}
+                </DialogTitle>
+                <DialogDescription className="sr-only">
+                    {mode === 'open' ? t('filePicker.openFileDescription') : t('filePicker.saveFileDescription')}
+                </DialogDescription>
+
                 {/* Custom Window Header */}
                 <div
                     className="h-11 border-b border-white/10 flex items-center justify-between px-4 shrink-0 select-none relative"

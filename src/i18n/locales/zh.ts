@@ -497,7 +497,9 @@ export const zh: TranslationDict = {
 	},
 	filePicker: {
 		openFile: '打开文件',
+		openFileDescription: '从文件系统中选择要打开的文件',
 		saveFile: '保存文件',
+		saveFileDescription: '选择保存文件的位置和名称',
 		emptyFolder: '此文件夹为空',
 		nameLabel: '名称：',
 		untitledPlaceholder: '未命名',

@@ -553,8 +553,10 @@ export const ro: TranslationDict = {
         },
     },
     filePicker: {
-        openFile: 'Deschide Fișier',
-        saveFile: 'Salvează Fișier',
+        openFile: 'Deschide fișierul',
+    openFileDescription: 'Selectați un fișier pentru a-l deschide din sistemul de fișiere',
+    saveFile: 'Salvează fișierul',
+    saveFileDescription: 'Alegeți o locație și un nume pentru a salva fișierul',
         emptyFolder: 'Acest dosar este gol',
         nameLabel: 'Nume:',
         untitledPlaceholder: 'Fără Titlu',

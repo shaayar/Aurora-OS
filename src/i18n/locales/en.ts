@@ -500,7 +500,9 @@ export const en: TranslationDict = {
   },
   filePicker: {
     openFile: 'Open File',
+    openFileDescription: 'Select a file to open from the file system',
     saveFile: 'Save File',
+    saveFileDescription: 'Choose a location and name to save your file',
     emptyFolder: 'This folder is empty',
     nameLabel: 'Name:',
     untitledPlaceholder: 'Untitled',

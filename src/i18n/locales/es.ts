@@ -555,7 +555,9 @@ export const es: TranslationDict = {
   },
   filePicker: {
     openFile: 'Abrir archivo',
+    openFileDescription: 'Seleccione un archivo para abrir del sistema de archivos',
     saveFile: 'Guardar archivo',
+    saveFileDescription: 'Elija una ubicación y un nombre para guardar su archivo',
     emptyFolder: 'Esta carpeta está vacía',
     nameLabel: 'Nombre:',
     untitledPlaceholder: 'Sin título',

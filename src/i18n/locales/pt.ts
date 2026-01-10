@@ -496,7 +496,9 @@ export const pt: TranslationDict = {
   },
   filePicker: {
     openFile: 'Abrir arquivo',
+    openFileDescription: 'Selecione um arquivo para abrir do sistema de arquivos',
     saveFile: 'Salvar arquivo',
+    saveFileDescription: 'Escolha um local e um nome para salvar seu arquivo',
     emptyFolder: 'Esta pasta está vazia',
     nameLabel: 'Nome:',
     untitledPlaceholder: 'Sem título',

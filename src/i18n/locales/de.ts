@@ -490,7 +490,9 @@ export const de: TranslationDict = {
   },
   filePicker: {
     openFile: 'Datei öffnen',
+    openFileDescription: 'Wählen Sie eine Datei zum Öffnen aus dem Dateisystem aus',
     saveFile: 'Datei speichern',
+    saveFileDescription: 'Wählen Sie einen Speicherort und einen Namen für Ihre Datei',
     emptyFolder: 'Dieser Ordner ist leer',
     nameLabel: 'Name:',
     untitledPlaceholder: 'Unbenannt',

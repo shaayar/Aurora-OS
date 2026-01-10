@@ -45,6 +45,7 @@ trigger: always_on
     - **Usage**: `notify.system(type, source, message, subtitle)`.
     - **Formatting**: `message` prop accepts `React.ReactNode`, allowing for rich grid/list layouts in toasts (e.g., "Get Info" dialogs).
     - **Empty States**: Use `EmptyState` component (`src/components/ui/empty-state.tsx`) for standardizing empty folders, empty search results, and initial app states.
+    - **Performance**: High-traffic apps (like Notepad) MUST isolate re-renders by splitting the main editor/content logic into memoized sub-components.
     - **Provider**: Handled via `Sonner` and `SystemToast` component.
     </architecture_mechanics>
 
@@ -56,6 +57,7 @@ trigger: always_on
 - **Security**: Check permissions via `checkPermissions(node, user, 'read'|'write'|'execute')`.
 - **UI Integrity**: Use `forwardRef` for any component used with `<ContextMenuTrigger asChild>` to ensure Radix UI ref handling works.
 - **I18n**: All UI strings MUST use `useI18n()`. definition: `src/i18n/locales/en.ts`.
+- **Accessibility**: All `Dialog` or `AlertDialog` components MUST include a `Title` and `Description`. Use `sr-only` class to hide them if they clash with visual design but are required for A11y.
 - **Docs Sync**: On architecture changes, update `.agent/rules/context.md` & `public/llms-full.txt`.
   </critical_rules>
 
