@@ -39,25 +39,22 @@ export function getSafeImageUrl(url: string | null | undefined): string | null {
 
   } catch {
     // 5. Fallback for strings that failed URL parsing
-    const lowerSafe = sanitized.trim().toLowerCase();
+    //    STRICT CHECK: Only allow simple filenames (alphanumeric, dots, dashes, spaces, underscores)
+    //    Reject EVERYTHING else to satisfy "Default Deny" security policy.
+    
+    // Allow: "photo.jpg", "My File.png", "image-123.gif"
+    // Reject: "javascript:...", "data:...", "foo:bar", "foo/bar" (unless caught by startsWith above, relative paths usually need ./ or /)
 
-    // Block known malicious schemes
-    if (
-      lowerSafe.startsWith("javascript:") ||
-      lowerSafe.startsWith("vbscript:") ||
-      lowerSafe.startsWith("data:")
-    ) {
-      return null;
+    // Note: We trim whitespace before checking
+    const trimmed = sanitized.trim();
+    
+    // Regex: Start to End, allowed chars: alphanumeric, dot, dash, space, forward slash, underscore.
+    if (/^[\w\-./\s]+$/.test(trimmed)) {
+      return sanitized;
     }
 
-    // Block potential schemes (strings with colons) if they didn't parse as URLs
-    // unless strictly a file path
-    if (lowerSafe.includes(":")) {
-      return null;
-    }
-
-    // Assume safe filename
-    return sanitized;
+    // Default Deny
+    return null;
   }
 }
 
