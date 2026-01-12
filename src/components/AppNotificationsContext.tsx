@@ -1,28 +1,15 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, startTransition } from 'react';
 import { useAppContext } from '@/components/AppContext';
 
-/**
- * Mental Model: App Notifications
- * 
- * Notifications carry three key pieces of context:
- * - appId: which app the notification originates from
- * - owner: which user/tenant owns this notification (enables multi-user and later remote/server contexts)
- * - data: the specific item the notification is about (e.g., { emailId: '123' }, { messageId: 'msg_456' })
- * 
- * When a user clicks a notification:
- * - The app opens via openWindow(appId, data, owner)
- * - The app receives the data payload and can focus/navigate to the exact item
- * - This supports: email from X, message from Y, server event Z, etc.
- * - Future: enables notifications from remote computers, servers, tenants
- */
+
 export interface AppNotification {
   id: string;
   appId: string;
-  owner: string; // User/tenant that owns this notification
+  owner: string; 
   title: string;
   message: string;
-  createdAt: number; // ms since epoch
-  data?: Record<string, unknown>; // The specific item this notification is about
+  createdAt: number; 
+  data?: Record<string, unknown>; 
   unread: boolean;
 }
 
@@ -60,7 +47,6 @@ export function AppNotificationsProvider({ children }: { children: React.ReactNo
     }
   });
 
-  // Reload notifications when active user changes
   useEffect(() => {
     try {
       const raw = localStorage.getItem(storageKeyFor(activeUser));
@@ -75,12 +61,11 @@ export function AppNotificationsProvider({ children }: { children: React.ReactNo
     }
   }, [activeUser]);
 
-  // Persist on change
   useEffect(() => {
     try {
       localStorage.setItem(storageKeyFor(activeUser), JSON.stringify(notifications));
     } catch {
-      /* ignore storage errors */
+      
     }
   }, [notifications, activeUser]);
 
@@ -95,7 +80,7 @@ export function AppNotificationsProvider({ children }: { children: React.ReactNo
       data: n.data,
       unread: true,
     };
-    setNotifications((prev) => [item, ...prev].slice(0, 100)); // Keep last 100
+    setNotifications((prev) => [item, ...prev].slice(0, 100)); 
     return item;
   }, []);
 
