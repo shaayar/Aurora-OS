@@ -225,7 +225,7 @@ export default function OS() {
                 break;
             case 'appstore':
                 title = 'App Store';
-                content = <AppStore owner={owner} />;
+                content = <AppStore owner={owner} onOpenApp={(...args) => openWindowRef.current(...args)} />;
                 break;
             default:
                 title = type.charAt(0).toUpperCase() + type.slice(1);

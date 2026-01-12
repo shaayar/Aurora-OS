@@ -264,20 +264,26 @@ export function useTerminalLogic(
   useEffect(() => {
     try {
       const serializeOutput = (o: any): string => {
+        if (o === null || o === undefined) return '';
         if (typeof o === 'string') return o;
         if (typeof o === 'number') return String(o);
-        // Try to recover text from React elements if they follow a known structure
-        if (o && typeof o === 'object') {
-           if (o.props?.children) {
-               if (typeof o.props.children === 'string') return o.props.children;
-               if (Array.isArray(o.props.children)) {
-                   return o.props.children.map(serializeOutput).join('');
-               }
-           }
-           // Fallback for objects (like `ls` items might be divs with props)
-           // If it's a grid (div with children array), try to map children
-           if (Array.isArray(o)) return o.map(serializeOutput).join('\n');
+        if (Array.isArray(o)) return o.map(serializeOutput).join('\n');
+        
+        // React Element / Object handling
+        if (typeof o === 'object') {
+            // Check for children in props
+            const children = o.props?.children;
+            if (children) {
+                if (Array.isArray(children)) {
+                    return children.map(serializeOutput).join(''); // Join without newline for inline spans
+                }
+                return serializeOutput(children);
+            }
+            // Fallback: try to grab any text-like properties or simple toString
+            // If it's a DOM-like object (e.g. from a mock/test), it might have textContent
+            if (o.textContent) return o.textContent;
         }
+        
         return "[Complex Output]";
       };
 

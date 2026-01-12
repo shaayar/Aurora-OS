@@ -1,7 +1,7 @@
 import { useRef, useEffect, ReactNode, useMemo, memo } from 'react';
 import { AppTemplate } from './AppTemplate';
-import pkg from '../../../package.json';
-import { useTerminalLogic } from '../../hooks/useTerminalLogic';
+import pkg from '@/../package.json';
+import { useTerminalLogic } from '@/hooks/useTerminalLogic';
 
 export interface TerminalProps {
   id: string;
@@ -50,11 +50,8 @@ export function Terminal({ id, onLaunchApp, owner }: TerminalProps) {
     return () => {
         window.removeEventListener('app-menu-action', handleMenuAction as EventListener);
         
-        // Clear history on unmount (Window Close), UNLESS we are refreshing the page
-        // "is_refreshing" is set by App.tsx on beforeunload
-        if (!sessionStorage.getItem('is_refreshing')) {
-            clearHistory();
-        }
+        // Removed auto-clear history on unmount to prevent data loss on re-renders/spurious unmounts.
+        // History persistence is now handled solely by useTerminalLogic via localStorage.
     };
   }, [clearHistory, setInput, id]);
 
@@ -244,7 +241,7 @@ const TerminalHistoryItem = memo(function TerminalHistoryItem({ item, homePath, 
   );
 });
 
-import { AppMenuConfig, ContextMenuConfig } from '../../types';
+import { AppMenuConfig, ContextMenuConfig } from '@/types';
 
 export const terminalContextMenuConfig: ContextMenuConfig = {
   items: [

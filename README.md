@@ -124,6 +124,7 @@ Or use the [GitHub Pages](https://mental-os.github.io/Aurora-OS.js) (LIVE DEMO)
 - **Simulated Cloud Services**: Added initial support for simulated cloud services (e.g., TrustMail accounts DB, messages DB).
 - **TrustMail**: Added Account Recovery system with secret key generation and storage.
 - **Fully functional Messages App**: with support for multiple accounts, bidirectional chat, and more.
+- **App Store**: Uninstall confirmation and window closing block event if an app is still installing.
 
 ### Removed
 
@@ -143,6 +144,7 @@ Or use the [GitHub Pages](https://mental-os.github.io/Aurora-OS.js) (LIVE DEMO)
 - **Main Services & Mail**: Trash functionality and permanent deletion.
 - **Mail App**: Improved UI and responsive design to match Messages App.
 - **Terminal performance**: by switching to memo's, the terminal is now much faster and more responsive.
+- **App Store**: Improved UI and responsive design to match other Apps.
 
 ### Fixed
 
