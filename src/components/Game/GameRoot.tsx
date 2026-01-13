@@ -8,6 +8,8 @@ import { useAppContext } from '@/components/AppContext';
 import { STORAGE_KEYS, hardReset } from '@/utils/memory';
 import {Onboarding} from "@/components/Game/Onboarding.tsx";
 
+import { StorageIndicator } from '@/components/ui/StorageIndicator';
+
 // The "Actual Game" being played is passed as children (The OS Desktop)
 interface GameRootProps {
     children: React.ReactNode;
@@ -58,39 +60,45 @@ export function GameRoot({ children }: GameRootProps) {
     // User requested "Video Game Flow". Usually games go to intro/menu on refresh.
     // So default behavior is correct.
 
-    switch (gameState) {
-        case 'INTRO':
-            return <IntroSequence onComplete={() => setGameState('MENU')} />;
+    return (
+        <div className="fixed inset-0 w-full h-full bg-black text-white overflow-hidden">
+            <StorageIndicator />
+            {(() => {
+                switch (gameState) {
+                    case 'INTRO':
+                        return <IntroSequence onComplete={() => setGameState('MENU')} />;
 
-        case 'MENU':
-            return (
-                <MainMenu
-                    onNewGame={handleNewGame}
-                    onContinue={handleContinue}
-                    canContinue={hasSave}
-                />
-            );
+                    case 'MENU':
+                        return (
+                            <MainMenu
+                                onNewGame={handleNewGame}
+                                onContinue={handleContinue}
+                                canContinue={hasSave}
+                            />
+                        );
 
-        case 'BOOT':
-            return <BootSequence onComplete={() => setGameState('GAMEPLAY')} />;
+                    case 'BOOT':
+                        return <BootSequence onComplete={() => setGameState('GAMEPLAY')} />;
 
-        case 'FIRST_BOOT':
-            return <BootSequence onComplete={() => setGameState('ONBOARDING')} />;
+                    case 'FIRST_BOOT':
+                        return <BootSequence onComplete={() => setGameState('ONBOARDING')} />;
 
-        case 'ONBOARDING':
-            return <Onboarding
-                onContinue={handleOnboardingComplete}
-            />
+                    case 'ONBOARDING':
+                        return <Onboarding
+                            onContinue={handleOnboardingComplete}
+                        />
 
-        case 'GAMEPLAY':
-            return (
-                <div className="fixed inset-0 w-full h-full bg-black">
-                    {/* Add an "ESC" menu listener here if we want a pause menu? */}
-                    {children}
-                </div>
-            );
+                    case 'GAMEPLAY':
+                        return (
+                            <div className="relative w-full h-full">
+                                {children}
+                            </div>
+                        );
 
-        default:
-            return null;
-    }
+                    default:
+                        return null;
+                }
+            })()}
+        </div>
+    );
 }

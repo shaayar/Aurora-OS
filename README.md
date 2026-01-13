@@ -151,6 +151,8 @@ Or use the [GitHub Pages](https://mental-os.github.io/Aurora-OS.js) (LIVE DEMO)
 - **Terminal performance**: by switching to memos, the terminal is now much faster and more responsive.
 - **Notifications**: Clear distinction between system notifications (debug notifications in bottom right) and app notifications (app events notifications in top right and the Notifications applet).
 - **App Store**: Improved UI and responsive design to match other Apps.
+- **Main Menu**: Refactored Credits modal to match system aesthetics and added "Contribute" tab.
+- **BIOS Settings**: Complete overhaul with tabbed interface, graphics presets (Ultra/Performance), and granular audio controls.
 
 ### Fixed
 

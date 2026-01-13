@@ -5,6 +5,13 @@ export const fr: TranslationDict = {
     yesterday: 'Hier',
   },
   game: {
+    intro: {
+      initialize: 'Initialiser le système',
+      clickToStart: 'CLIQUEZ POUR COMMENCER',
+      companyName: 'Nova Republika',
+      tagline: 'INFORMATION SYSTEMS',
+      skipHint: 'ESC ou ESPACE pour passer',
+    },
     mainMenu: {
       continue: {
         label: 'Continuer',
@@ -30,6 +37,10 @@ export const fr: TranslationDict = {
           cancel: 'Annuler',
           confirm: 'Éteindre',
         },
+      },
+      credits: {
+        label: 'Credits',
+        desc: 'System Architects',
       },
     },
     bios: {

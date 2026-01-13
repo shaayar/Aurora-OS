@@ -12,6 +12,11 @@ export const en: TranslationDict = {
     yesterday: 'Yesterday',
   },
   game: {
+    intro: {
+      initialize: 'Initialize System',
+      clickToStart: 'CLICK TO START',
+      skipHint: 'ESC or SPACE to skip',
+    },
     mainMenu: {
       continue: {
         label: 'Continue',
@@ -37,6 +42,10 @@ export const en: TranslationDict = {
           cancel: 'Cancel',
           confirm: 'Shutdown',
         },
+      },
+      credits: {
+        label: 'Credits',
+        desc: 'System Architects',
       },
     },
     bios: {

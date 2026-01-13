@@ -74,6 +74,7 @@ trigger: always_on
     - **Display**: Stacking "Heads-Up" toasts (top-right, max 3) + Notification Center (sidebar).
     - **Performance**: High-traffic apps (like Notepad) MUST isolate re-renders by splitting the main editor/content logic into memoized sub-components.
     - **Provider**: Handled via `Sonner` (system) and `AppNotificationsContext` (app-level).
+    - **Global Indicators**: Retro "Hard Drive" LED (Green/Red) in bottom-left, triggered by `localStorage` I/O. Filters out "Soft" reads (e.g., volume) via monkey-patched `memory.ts`.
 
 6.  **Audio & Metadata System**:
 
@@ -82,7 +83,19 @@ trigger: always_on
     - **Binary Metadata**: Custom ID3 parser (`src/utils/id3Parser.ts`) extracts professional tags (TIT2, TPE1, TALB) from MP3 files.
     - **Asset Fetching**: Metadata resolution for local assets uses `fetch` with `Range: bytes=0-512KB` to efficiently read headers without full downloads.
 
-7.  **Reference Implementations**:
+7.  **Game Flow & Pre-OS Experience**:
+
+    - **State Machine**: 6-state flow handled by `GameRoot.tsx` (INTRO → MENU → FIRST_BOOT/BOOT → ONBOARDING → GAMEPLAY).
+    - **Main Menu**: Video game-style interface with keyboard nav. Includes **Settings** (Tabbed: Display/Audio/System) and **Credits** modals.
+    - **Save Detection**: Checks `localStorage.getItem(STORAGE_KEYS.VERSION)` to determine if save exists.
+    - **New Game**: Calls `hardReset()` to wipe all `localStorage`, then `resetFileSystem()` for in-memory sync.
+    - **Boot Sequence**: Realistic OS boot animation with dynamic log generation, pre-loads OS chunk.
+    - **Onboarding**: Multi-step wizard (Language → Account → Theme → Finishing) for first-time setup.
+      - Creates user via `createUser()`, initializes home directory, sets system creation timestamp.
+    - **GAMEPLAY State**: Unmounts/remounts OS Desktop to force app re-initialization after state changes.
+    - **AudioContext**: Unlocked in IntroSequence via user interaction (browser requirement).
+
+8.  **Reference Implementations**:
 
     - **Finder (`FileManager.tsx`)**:
 

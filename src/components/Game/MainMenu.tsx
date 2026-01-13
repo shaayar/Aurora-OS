@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Settings, Power, Play, Disc } from 'lucide-react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Settings, Power, Play, Disc, Users } from 'lucide-react';
 import { cn } from '@/components/ui/utils';
 import { feedback } from '@/services/soundFeedback';
 import { GameScreenLayout } from '@/components/Game/GameScreenLayout';
 import { SettingsModal } from '@/components/Game/SettingsModal';
+import { CreditsModal } from '@/components/Game/CreditsModal';
 import { useI18n } from '@/i18n/index';
 import { useFileSystem } from '@/components/FileSystemContext';
 
@@ -14,16 +15,25 @@ interface MainMenuProps {
     canContinue: boolean;
 }
 
+interface MenuItem {
+    id: string;
+    label: string;
+    icon: React.ElementType;
+    disabled: boolean;
+    action: () => void;
+    desc: string;
+}
+
 export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) {
     const { t } = useI18n();
+    // Default select index: if can continue 0, else 1 (New Game)
     const [selected, setSelected] = useState(canContinue ? 0 : 1);
     const [showSettings, setShowSettings] = useState(false);
     const [showExitConfirm, setShowExitConfirm] = useState(false);
+    const [showCredits, setShowCredits] = useState(false);
     const { saveFileSystem } = useFileSystem();
 
-    // Keyboard navigation could be added here for true "game" feel
-
-    const menuItems = [
+    const menuItems = useMemo<MenuItem[]>(() => [
         {
             id: 'continue',
             label: t('game.mainMenu.continue.label'),
@@ -55,10 +65,57 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
             label: t('game.mainMenu.exit.label'),
             icon: Power,
             disabled: false,
-            action: () => setShowExitConfirm(true), // Changed to show confirmation
+            action: () => setShowExitConfirm(true),
             desc: t('game.mainMenu.exit.desc')
         }
-    ];
+    ], [canContinue, onContinue, onNewGame, t]);
+
+    // Keyboard Navigation
+    const handleKeyDown = useCallback((e: KeyboardEvent) => {
+        if (showSettings || showExitConfirm || showCredits) return;
+
+        switch (e.key) {
+            case 'ArrowUp':
+                e.preventDefault();
+                setSelected(prev => {
+                    const next = (prev - 1 + menuItems.length) % menuItems.length;
+                    // Skip disabled items going up
+                    if (menuItems[next].disabled) {
+                        return (next - 1 + menuItems.length) % menuItems.length;
+                    }
+                    feedback.hover();
+                    return next;
+                });
+                break;
+            case 'ArrowDown':
+                e.preventDefault();
+                setSelected(prev => {
+                    const next = (prev + 1) % menuItems.length;
+                    // Skip disabled items going down
+                    if (menuItems[next].disabled) {
+                        return (next + 1) % menuItems.length;
+                    }
+                    feedback.hover();
+                    return next;
+                });
+                break;
+            case 'Enter':
+            case ' ': {
+                e.preventDefault();
+                const item = menuItems[selected];
+                if (item && !item.disabled) {
+                    feedback.click();
+                    item.action();
+                }
+                break;
+            }
+        }
+    }, [menuItems, selected, showSettings, showExitConfirm, showCredits]);
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [handleKeyDown]);
 
     return (
         <GameScreenLayout zIndex={40000}>
@@ -77,15 +134,15 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
                             item.action();
                         }}
                         onMouseEnter={() => {
-                            if (item.disabled) return;
+                            if (item.disabled || selected === index) return;
                             setSelected(index);
                             feedback.hover();
                         }}
                         className={cn(
-                            "group relative w-full p-4 rounded-xl transition-all duration-200 border border-transparent",
+                            "group relative w-full p-4 rounded-xl transition-all duration-200 border border-transparent outline-none",
                             !item.disabled && "hover:bg-white/10 hover:border-white/20 hover:scale-[1.02] hover:shadow-lg cursor-pointer",
                             item.disabled && "opacity-50 grayscale cursor-not-allowed",
-                            selected === index && !item.disabled && "bg-white/10 border-white/20 shadow-lg"
+                            selected === index && !item.disabled && "bg-white/10 border-white/20 shadow-lg scale-[1.02]"
                         )}
                     >
                         <div className="flex items-center gap-4">
@@ -113,58 +170,88 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
                         </div>
                     </motion.button>
                 ))}
+
+                {/* Footer / Credits */}
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="mt-8 flex justify-center"
+                >
+                     <button
+                        onClick={() => { feedback.click(); setShowCredits(true); }}
+                        className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 transition-all border border-white/5 hover:border-white/20"
+                    >
+                        <Users className="w-4 h-4 text-white/40 group-hover:text-white/80 transition-colors" />
+                        <span className="text-xs font-medium text-white/40 group-hover:text-white/80 transition-colors tracking-wide uppercase">
+                            Credits
+                        </span>
+                    </button>
+                </motion.div>
             </div>
 
             {/* Settings Modal */}
-            {showSettings && (
-                <SettingsModal onClose={() => setShowSettings(false)} />
-            )}
+            <AnimatePresence>
+                {showSettings && (
+                    <SettingsModal onClose={() => setShowSettings(false)} />
+                )}
+            </AnimatePresence>
 
-            {/* Exit Confirmation Modal */}
-            {showExitConfirm && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
-                    <motion.div
-                        initial={{ scale: 0.95, opacity: 0, y: 10 }}
-                        animate={{ scale: 1, opacity: 1, y: 0 }}
-                        className="bg-zinc-900/90 border border-red-500/30 p-6 max-w-sm w-full rounded-2xl shadow-[0_0_30px_rgba(239,68,68,0.2)] relative text-center"
-                    >
-                        <div className="flex flex-col items-center gap-4">
-                            <div className="p-4 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 shadow-inner">
-                                <Power className="w-8 h-8" />
-                            </div>
+            {/* Credits Modal */}
+            <AnimatePresence>
+                {showCredits && (
+                    <CreditsModal onClose={() => setShowCredits(false)} />
+                )}
+            </AnimatePresence>
 
-                            <div className="space-y-2">
-                                <h3 className="text-xl font-bold text-white tracking-wide">{t('game.mainMenu.exit.confirm.title')}</h3>
-                                <p className="text-sm text-white/50">
-                                    {t('game.mainMenu.exit.confirm.message')}
-                                </p>
-                            </div>
+            {/* Exit Confirmation Modal (Styled) */}
+            <AnimatePresence>
+                {showExitConfirm && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+                        <motion.div
+                            initial={{ scale: 0.95, opacity: 0, y: 10 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.95, opacity: 0, y: 10 }}
+                            className="bg-zinc-900/90 border border-red-500/30 p-8 max-w-md w-full rounded-2xl shadow-[0_0_30px_rgba(239,68,68,0.2)] relative text-center"
+                        >
+                            <div className="flex flex-col items-center gap-6">
+                                <div className="p-4 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 shadow-inner">
+                                    <Power className="w-10 h-10" />
+                                </div>
 
-                            <div className="grid grid-cols-2 gap-3 w-full mt-4">
-                                <button
-                                    onClick={() => {
-                                        feedback.click();
-                                        setShowExitConfirm(false);
-                                    }}
-                                    className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium transition-colors text-sm"
-                                >
-                                    {t('game.mainMenu.exit.confirm.cancel')}
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        feedback.click();
-                                        saveFileSystem();
-                                        window.close();
-                                    }}
-                                    className="px-4 py-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-200 hover:text-white font-medium transition-all shadow-[0_0_15px_rgba(239,68,68,0.2)] hover:shadow-[0_0_25px_rgba(239,68,68,0.4)] text-sm"
-                                >
-                                    {t('game.mainMenu.exit.confirm.confirm')}
-                                </button>
+                                <div className="space-y-2">
+                                    <h3 className="text-2xl font-bold text-white tracking-wide">{t('game.mainMenu.exit.confirm.title')}</h3>
+                                    <p className="text-white/60">
+                                        {t('game.mainMenu.exit.confirm.message')}
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4 w-full mt-2">
+                                    <button
+                                        onClick={() => {
+                                            feedback.click();
+                                            setShowExitConfirm(false);
+                                        }}
+                                        className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium transition-colors"
+                                    >
+                                        {t('game.mainMenu.exit.confirm.cancel')}
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            feedback.click();
+                                            saveFileSystem();
+                                            window.close();
+                                        }}
+                                        className="px-6 py-3 rounded-xl bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-200 hover:text-white font-medium transition-all shadow-[0_0_15px_rgba(239,68,68,0.2)] hover:shadow-[0_0_25px_rgba(239,68,68,0.4)]"
+                                    >
+                                        {t('game.mainMenu.exit.confirm.confirm')}
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    </motion.div>
-                </div>
-            )}
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </GameScreenLayout>
     );
 }

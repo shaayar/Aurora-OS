@@ -219,3 +219,49 @@ export function getAppStateKey(appId: string, username: string): string {
 export function getWindowKey(username: string): string {
     return `${STORAGE_KEYS.WINDOWS_PREFIX}${username}`;
 }
+
+/**
+ * Initializes the storage observer to track memory access
+ * This monkey-patches localStorage to emit events for UI feedback
+ */
+export const STORAGE_EVENT = 'aurora-storage-event';
+
+export type StorageOperation = 'read' | 'write' | 'clear';
+
+export function initStorageObserver() {
+    const originalSetItem = localStorage.setItem;
+    const originalGetItem = localStorage.getItem;
+    const originalRemoveItem = localStorage.removeItem;
+    const originalClear = localStorage.clear;
+
+    const dispatch = (op: StorageOperation) => {
+        window.dispatchEvent(new CustomEvent(STORAGE_EVENT, { detail: { op } }));
+    };
+
+    localStorage.setItem = function(key: string, value: string) {
+        dispatch('write');
+        return originalSetItem.apply(this, [key, value]);
+    };
+
+    localStorage.getItem = function(key: string) {
+        // Only trigger "Load" indicator for Hard Memory reads (Core System Data)
+        // Soft memory (preferences, UI state) reads should be silent to avoid noise
+        if (getMemoryType(key) === 'hard') {
+            dispatch('read');
+        }
+        return originalGetItem.apply(this, [key]);
+    };
+
+    localStorage.removeItem = function(key: string) {
+        dispatch('write');
+        return originalRemoveItem.apply(this, [key]);
+    };
+
+    localStorage.clear = function() {
+        dispatch('clear');
+        return originalClear.apply(this, []);
+    };
+
+    console.log('Storage Observer initialized');
+}
+

@@ -5,7 +5,14 @@ export const ro: TranslationDict = {
     yesterday: 'Ieri',
   },
     game: {
-        mainMenu: {
+    intro: {
+      initialize: 'Inițializare sistem',
+      clickToStart: 'CLICK PENTRU START',
+      companyName: 'Nova Republika',
+      tagline: 'INFORMATION SYSTEMS',
+      skipHint: 'ESC sau SPAȚIU pentru sărituri',
+    },
+    mainMenu: {
             continue: {
                 label: 'Continuă',
                 desc: {
@@ -30,6 +37,10 @@ export const ro: TranslationDict = {
                     cancel: 'Anulează',
                     confirm: 'Închide',
                 },
+            },
+            credits: {
+                label: 'Credits',
+                desc: 'System Architects',
             },
         },
         bios: {

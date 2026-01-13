@@ -11,6 +11,13 @@ export const zh: TranslationDict = {
 		yesterday: '昨天',
 	},
 	game: {
+		intro: {
+			initialize: '初始化系统',
+			clickToStart: '点击开始',
+			companyName: 'Nova Republika',
+			tagline: 'INFORMATION SYSTEMS',
+			skipHint: 'ESC 或 空格键跳过',
+		},
 		mainMenu: {
 			continue: {
 				label: '继续',
@@ -36,6 +43,10 @@ export const zh: TranslationDict = {
 					cancel: '取消',
 					confirm: '关机',
 				},
+			},
+			credits: {
+				label: 'Credits',
+				desc: 'System Architects',
 			},
 		},
 		bios: {
