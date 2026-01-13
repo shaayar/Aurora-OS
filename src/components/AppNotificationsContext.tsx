@@ -69,6 +69,25 @@ export function AppNotificationsProvider({ children }: { children: React.ReactNo
     }
   }, [notifications, activeUser]);
 
+  // Listen for system-wide events
+  useEffect(() => {
+    const handleAppNotification = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      push({
+        appId: detail.appId,
+        owner: detail.owner,
+        title: detail.title,
+        message: detail.message,
+        data: detail.data
+      });
+      // Also play sound for app notifications
+      soundManager.play('success'); 
+    };
+
+    window.addEventListener('aurora-app-notification', handleAppNotification);
+    return () => window.removeEventListener('aurora-app-notification', handleAppNotification);
+  }, [push]);
+
   const push = useCallback<AppNotificationsContextType['push']>((n) => {
     const item: AppNotification = {
       id: `${n.appId}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,

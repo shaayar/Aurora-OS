@@ -160,6 +160,16 @@ export function DevCenter() {
                                         <div className="font-medium text-red-400 mb-1 group-hover:text-red-300">{t('devCenter.ui.errorToast')}</div>
                                         <div className="text-sm text-white/50 whitespace-normal">{t('devCenter.ui.errorDescription')}</div>
                                     </GlassButton>
+                                    
+                                    {/* App Notification Test */}
+                                    <GlassButton
+                                        variant="default"
+                                        className="h-auto block p-4 text-left group border-blue-500/20 bg-blue-500/10 hover:bg-blue-500/20 col-span-full"
+                                        onClick={() => notify.app('dev-center', 'root', 'Dev Center Test', 'This is a persistent app notification test.')}
+                                    >
+                                        <div className="font-medium text-blue-400 mb-1 group-hover:text-blue-300">{t('devCenter.ui.appNotification')}</div>
+                                        <div className="text-sm text-white/50 whitespace-normal">{t('devCenter.ui.appNotificationDesc') || 'Test persistent app notification'}</div>
+                                    </GlassButton>
                                 </div>
                             </section>
 
