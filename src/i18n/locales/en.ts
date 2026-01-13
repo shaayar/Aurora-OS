@@ -219,6 +219,7 @@ export const en: TranslationDict = {
       minutesAgo: '{{minutes}}m ago',
       hoursAgo: '{{hours}}h ago',
     },
+    new: 'New',
     items: {
       newEmail: {
         title: 'New Email',

@@ -7,6 +7,8 @@ import { useAppContext } from './AppContext';
 import { useI18n } from '../i18n';
 import { useAppNotifications } from './AppNotificationsContext';
 
+import { getApp } from '@/config/appRegistry';
+
 interface NotificationsAppletProps {
   onOpenApp?: (appId: string, data?: Record<string, unknown>, owner?: string) => void;
 }
@@ -15,7 +17,7 @@ export function NotificationsApplet({ onOpenApp }: NotificationsAppletProps) {
   const { accentColor, reduceMotion, disableShadows } = useAppContext();
   const { blurStyle, getBackgroundColor } = useThemeColors();
   const { t } = useI18n();
-  const { notifications, unreadCount, markRead, clearAll } = useAppNotifications();
+  const { notifications, unreadCount, markRead, clearAll, remove } = useAppNotifications();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleNotificationClick = (appId: string, data: Record<string, unknown> | undefined, owner: string | undefined) => {
@@ -71,20 +73,24 @@ export function NotificationsApplet({ onOpenApp }: NotificationsAppletProps) {
             <div className="p-6 text-white/50 text-sm text-center">{t('notifications.empty') || 'No notifications'}</div>
           ) : (
             <AnimatePresence>
-              {notifications.map((notification, idx) => (
+              {notifications.map((notification, idx) => {
+                const app = getApp(notification.appId);
+                const AppIcon = app?.icon || Bell;
+                
+                return (
                 <motion.div
                   key={notification.id}
-                  className={`p-4 transition-colors cursor-pointer ${notification.unread ? 'bg-white/[0.04]' : 'hover:bg-white/[0.03]'}`}
+                  className={`p-4 transition-colors relative group ${notification.unread ? 'bg-white/4' : 'hover:bg-white/3'}`}
                   initial={{ opacity: 0, x: reduceMotion ? 0 : 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: reduceMotion ? 0 : idx * 0.05 }}
                   onClick={() => handleNotificationClick(notification.appId, notification.data, notification.owner)}
                 >
                   <div className="flex gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white/70 shrink-0" style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
-                      <Bell className="w-4 h-4" />
+                    <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white/70 shrink-0 border border-white/10">
+                      <AppIcon className="w-4 h-4" />
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 pr-6">
                       <div className="flex items-center gap-2">
                         <h3 className="text-sm text-white/90 font-medium truncate">{notification.title}</h3>
                         {notification.unread && (
@@ -101,8 +107,20 @@ export function NotificationsApplet({ onOpenApp }: NotificationsAppletProps) {
                       </div>
                     </div>
                   </div>
+                  
+                  <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        remove(notification.id);
+                    }}
+                    className="absolute top-4 right-2 p-1.5 rounded-full hover:bg-white/10 text-white/30 hover:text-white/80 transition-all opacity-0 group-hover:opacity-100"
+                    title={t('notifications.subtitles.deleted') || "Delete"}
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
                 </motion.div>
-              ))}
+                );
+              })}
             </AnimatePresence>
           )}
         </div>
