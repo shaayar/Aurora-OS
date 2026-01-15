@@ -120,10 +120,10 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
     return (
         <GameScreenLayout zIndex={40000}>
             {/* Menu Options Container - Fluid Sizing */}
-            <div className="flex flex-col justify-center w-full max-w-[90%] sm:max-w-[80vh] md:max-w-[70vh] lg:max-w-[60vh] shrink min-h-0 mx-auto">
-                <div 
+            <div className="flex flex-col justify-center w-full max-w-[clamp(16rem,40vh,32rem)] shrink min-h-0 mx-auto">
+                <div
                     className="flex flex-col justify-center min-h-0 ease-out"
-                    style={{ gap: 'min(3.5vh, 2rem)' }} // Start fresh (Wipes data)
+                    style={{ gap: 'clamp(0.5rem, 1.5vh, 2.25rem)' }} // More conservative gap
                 >
                     {menuItems.map((item, index) => (
                         <motion.button
@@ -143,40 +143,40 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
                                 feedback.hover();
                             }}
                             className={cn(
-                                "group relative w-full outline-none text-left font-mono shrink", 
+                                "group relative w-full outline-none text-left font-mono shrink",
                                 "border-[clamp(1px,0.2vh,2px)]", // Fluid Border
-                                
+
                                 // Interactive States (Only if NOT disabled)
-                                !item.disabled 
-                                    ? (selected === index 
-                                        ? "bg-white text-black border-white shadow-[0.5vh_0.5vh_0_0_rgba(0,0,0,0.5)]" 
+                                !item.disabled
+                                    ? (selected === index
+                                        ? "bg-white text-black border-white shadow-[0.5vh_0.5vh_0_0_rgba(0,0,0,0.5)]"
                                         : "bg-black/80 text-white border-white/40 hover:border-white cursor-pointer hover:bg-white hover:text-black hover:shadow-[0.5vh_0.5vh_0_0_rgba(0,0,0,0.5)]")
                                     : "opacity-50 grayscale cursor-not-allowed border-zinc-800 bg-zinc-950 text-zinc-600"
                             )}
                             style={{
-                                padding: 'min(3.5vh, 32px)', // Restored Larger Padding
-                                boxShadow: selected === index && !item.disabled 
-                                    ? '0.4vh 0.4vh 0 0 rgba(0,0,0,0.5)' 
+                                padding: 'clamp(0.75rem, 2.2vh, 2.5rem)', // More conservative Padding
+                                boxShadow: selected === index && !item.disabled
+                                    ? '0.4vh 0.4vh 0 0 rgba(0,0,0,0.5)'
                                     : '0 0 0 1px black'
                             }}
                         >
-                            <div className="flex items-center relative z-10" style={{ gap: 'min(3vh, 24px)' }}> 
+                            <div className="flex items-center relative z-10" style={{ gap: 'clamp(0.75rem, 2vh, 1.25rem)' }}>
                                 {/* Icon Box - Fluid Size */}
                                 <div className={cn(
                                     "flex items-center justify-center transition-colors shrink-0",
                                     item.disabled ? "border-zinc-800" : (selected === index ? "border-black" : "border-white/40 group-hover:border-black")
                                 )}
-                                style={{
-                                    width: 'min(5vh, 48px)', // Restored Size
-                                    height: 'min(5vh, 48px)',
-                                    borderWidth: 'clamp(1px, 0.2vh, 2px)'
-                                }}
+                                    style={{
+                                        width: 'clamp(2rem, 3.5vh, 3.5rem)', // Slightly smaller Icon Box
+                                        height: 'clamp(2rem, 3.5vh, 3.5rem)',
+                                        borderWidth: 'clamp(1px, 0.2vh, 2px)'
+                                    }}
                                 >
                                     <item.icon className={cn(
                                         "transition-colors",
                                         item.disabled ? "text-zinc-600" : (selected === index ? "text-black" : "text-white group-hover:text-black")
-                                    )} 
-                                    style={{ width: '50%', height: '50%' }}
+                                    )}
+                                        style={{ width: '50%', height: '50%' }}
                                     />
                                 </div>
 
@@ -185,7 +185,7 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
                                         "font-bold tracking-wider uppercase mb-0.5 truncate leading-none",
                                         item.disabled ? "text-zinc-600" : (selected === index ? "text-black" : "text-white group-hover:text-black")
                                     )}
-                                    style={{ fontSize: 'min(2.5vh, 24px)' }} // Restored Text
+                                        style={{ fontSize: 'clamp(1rem, 2vh, 1.5rem)' }} // Moderated Label
                                     >
                                         {item.label}
                                     </div>
@@ -193,7 +193,7 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
                                         "tracking-widest opacity-80 truncate hidden sm:block",
                                         item.disabled ? "text-zinc-700" : (selected === index ? "text-black/70" : "text-white/50 group-hover:text-black/70")
                                     )}
-                                    style={{ fontSize: 'min(1.2vh, 12px)' }}
+                                        style={{ fontSize: 'clamp(0.6rem, 1.1vh, 0.85rem)' }} // Fluid Desc
                                     >
                                         {item.desc}
                                     </div>
@@ -201,10 +201,10 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
 
                                 {/* Chevron / Indicator */}
                                 {selected === index && !item.disabled && (
-                                    <motion.div 
-                                        layoutId="cursor" 
+                                    <motion.div
+                                        layoutId="cursor"
                                         className="hidden sm:block font-bold animate-pulse"
-                                        style={{ fontSize: 'min(2.5vh, 24px)' }}
+                                        style={{ fontSize: 'clamp(1.1rem, 2.2vh, 1.75rem)' }}
                                     >
                                         &lt;
                                     </motion.div>
@@ -215,13 +215,13 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
                 </div>
 
                 {/* Footer / Credits - FIXED BOTTOM RIGHT */}
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
                     className="fixed bottom-6 right-6 z-50 hidden sm:block" // Hidden on mobile, valid for desktop design
                 >
-                     <button
+                    <button
                         onClick={() => { feedback.click(); setShowCredits(true); }}
                         className="group flex items-center gap-2 bg-black border border-white/20 hover:border-white font-mono text-white/40 hover:text-white uppercase tracking-widest transition-colors"
                         style={{
@@ -234,75 +234,81 @@ export function MainMenu({ onNewGame, onContinue, canContinue }: MainMenuProps) 
                         <span>]</span>
                     </button>
                 </motion.div>
-                
+
                 {/* Mobile Fallback for Credits (Keep it inline on tiny screens) */}
                 <div className="sm:hidden flex justify-center mt-4 opacity-50">
                     <button onClick={() => setShowCredits(true)} className="text-[10px] uppercase border border-white/20 px-2 py-1">[Credits]</button>
                 </div>
-            </div>
+            </div >
 
             {/* Settings Modal */}
             <AnimatePresence>
-                {showSettings && (
-                    <SettingsModal onClose={() => setShowSettings(false)} />
-                )}
-            </AnimatePresence>
+                {
+                    showSettings && (
+                        <SettingsModal onClose={() => setShowSettings(false)} />
+                    )
+                }
+            </AnimatePresence >
 
             {/* Credits Modal */}
             <AnimatePresence>
-                {showCredits && (
-                    <CreditsModal onClose={() => setShowCredits(false)} />
-                )}
-            </AnimatePresence>
+                {
+                    showCredits && (
+                        <CreditsModal onClose={() => setShowCredits(false)} />
+                    )
+                }
+            </AnimatePresence >
 
             {/* Exit Confirmation Modal (Terminal Style) */}
             <AnimatePresence>
-                {showExitConfirm && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-                        <motion.div
-                            initial={{ scale: 0.95, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.95, opacity: 0 }}
-                            className="terminal-card max-w-md w-full relative text-center font-mono p-8"
-                        >
-                            <div className="flex flex-col items-center gap-6">
-                                <div className="p-4 bg-white text-black border-2 border-white">
-                                    <Power className="w-10 h-10" />
-                                </div>
+                {
+                    showExitConfirm && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+                            <motion.div
+                                initial={{ scale: 0.95, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.95, opacity: 0 }}
+                                className="terminal-card max-w-md w-full relative text-center font-mono p-8"
+                            >
+                                <div className="flex flex-col items-center gap-6">
+                                    <div className="p-4 bg-white text-black border-2 border-white">
+                                        <Power className="w-10 h-10" />
+                                    </div>
 
-                                <div className="space-y-4">
-                                    <h3 className="text-2xl font-bold text-white uppercase tracking-wider">{t('game.mainMenu.exit.confirm.title')}</h3>
-                                    <p className="text-white/60 text-sm leading-relaxed border-t border-b border-white/10 py-4">
-                                        {t('game.mainMenu.exit.confirm.message')}
-                                    </p>
-                                </div>
+                                    <div className="space-y-4">
+                                        <h3 className="text-2xl font-bold text-white uppercase tracking-wider">{t('game.mainMenu.exit.confirm.title')}</h3>
+                                        <p className="text-white/60 text-sm leading-relaxed border-t border-b border-white/10 py-4">
+                                            {t('game.mainMenu.exit.confirm.message')}
+                                        </p>
+                                    </div>
 
-                                <div className="grid grid-cols-2 gap-4 w-full mt-2">
-                                    <button
-                                        onClick={() => {
-                                            feedback.click();
-                                            setShowExitConfirm(false);
-                                        }}
-                                        className="px-6 py-4 border-2 border-white/20 text-white hover:border-white hover:bg-white hover:text-black transition-all font-bold uppercase tracking-wide text-sm"
-                                    >
-                                        {t('game.mainMenu.exit.confirm.cancel')}
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            feedback.click();
-                                            saveFileSystem();
-                                            window.close();
-                                        }}
-                                        className="px-6 py-4 bg-red-600 text-white border-2 border-red-600 hover:bg-red-500 transition-all font-bold uppercase tracking-wide text-sm shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]"
-                                    >
-                                        {t('game.mainMenu.exit.confirm.confirm')}
-                                    </button>
+                                    <div className="grid grid-cols-2 gap-4 w-full mt-2">
+                                        <button
+                                            onClick={() => {
+                                                feedback.click();
+                                                setShowExitConfirm(false);
+                                            }}
+                                            className="px-6 py-4 border-2 border-white/20 text-white hover:border-white hover:bg-white hover:text-black transition-all font-bold uppercase tracking-wide text-sm"
+                                        >
+                                            {t('game.mainMenu.exit.confirm.cancel')}
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                feedback.click();
+                                                saveFileSystem();
+                                                window.close();
+                                            }}
+                                            className="px-6 py-4 bg-red-600 text-white border-2 border-red-600 hover:bg-red-500 transition-all font-bold uppercase tracking-wide text-sm shadow-[4px_4px_0_0_rgba(0,0,0,0.5)]"
+                                        >
+                                            {t('game.mainMenu.exit.confirm.confirm')}
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
-        </GameScreenLayout>
+                            </motion.div>
+                        </div>
+                    )
+                }
+            </AnimatePresence >
+        </GameScreenLayout >
     );
 }
