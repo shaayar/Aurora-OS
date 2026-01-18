@@ -142,7 +142,7 @@
       },
       "build": {
             "appId": "com.auroraos.app",
-            "productName": "Aurora OS",
+            "productName": "Aurora OS.js",
             "directories": {
                   "output": "release"
             },

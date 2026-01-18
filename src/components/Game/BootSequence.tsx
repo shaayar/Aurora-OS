@@ -3,6 +3,7 @@ import pkg from '../../../package.json';
 import { validateIntegrity } from '../../utils/integrity';
 import { getHardwareInfo } from '../../utils/hardware';
 import { soundManager } from '../../services/sound';
+import { APP_REGISTRY } from '../../config/appRegistry';
 
 interface BootSequenceProps {
     onComplete: () => void;
@@ -70,6 +71,10 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
             add('console', `Display: ${hw.screenResolution} (32-bit color)`, 'text-zinc-500');
             add('systemd[1]', `Detected architecture ${hw.platform}.`);
             add('systemd[1]', `Set hostname to <aurora-workstation>.`);
+            
+            // System Probes
+            add('kernel', `Probing Hardware Capabilities...`, 'text-zinc-500');
+            add('kernel', `Synchronizing System Clock (date-fns)...`, 'text-zinc-500');
 
             // Author/License Info
             const author = typeof pkg.author === 'string' ? pkg.author : (pkg.author as any)?.name;
@@ -85,6 +90,7 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
             const deps = pkg.dependencies as Record<string, string>;
             const devDeps = pkg.devDependencies as Record<string, string>;
 
+            add('systemd[1]', 'Mounting Virtual File System...', undefined, true, 0.2);
             add('systemd[1]', 'Starting Packet Manager...', undefined, true, 0.2);
 
             // Mock "apt-get update" style logs
@@ -101,10 +107,18 @@ export function BootSequence({ onComplete }: BootSequenceProps) {
             if (deps['motion']) add('physics', `Calibrating Motion Engine (framer-motion)`, 'text-slate-300');
             if (deps['howler']) add('sound', `Loading Audio Driver (Howler.js)`, 'text-slate-300');
             if (deps['lucide-react']) add('gpu', `Hydrating Vector Icon Set (Lucide)`, 'text-slate-300');
-            if (deps['tailwindcss']) add('style', `JIT Compass: TailwindCSS Active`, 'text-cyan-300');
+            if (deps['@radix-ui/react-dialog']) add('ui', `Loading Accessible Primitives (Radix UI)`, 'text-slate-300');
+            if (deps['tailwindcss']) add('style', `Initializing Oxide Engine (Tailwind v4)`, 'text-cyan-300');
             if (deps['sonner']) add('daemon', `Starting Notification Service (Sonner)`, 'text-slate-300');
             if (devDeps['typescript']) add('compiler', `Runtime Type Checks Enabled (TypeScript)`, 'text-cyan-300');
             if (devDeps['vite']) add('boot', `Vite Hot Module Replacement: Ready`, 'text-pink-400');
+            
+            // App Registry
+            add('systemd[1]', `Hydrating React Context...`, undefined, true, 0.3);
+            Object.keys(APP_REGISTRY).forEach((appId) => {
+                const app = APP_REGISTRY[appId];
+                add('registry', `Registered Application: ${app.name} (${app.id})`, 'text-zinc-600', false, 0.05);
+            });
 
             // Final stages
             add('systemd[1]', 'Started Session c2 of user active-user.', undefined, true, 0.3);

@@ -85,7 +85,7 @@ trigger: always_on
       - **Floating Window**: `DevStatusWindow.tsx` provides persistent system status and contribution CTAs.
     - **Save Detection**: Checks `localStorage.getItem(STORAGE_KEYS.VERSION)` to determine if save exists.
     - **New Game**: Calls `hardReset()` to wipe all `localStorage`, then `resetFileSystem()` for in-memory sync.
-    - **Boot Sequence**: Realistic OS boot animation with dynamic log generation, pre-loads OS chunk.
+    - **Boot Sequence**: Realistic OS boot animation with dynamic log generation (real `APP_REGISTRY` iteration, authentic tech stack logs), pre-loads OS chunk.
     - **Onboarding**: Multi-step wizard (Language → Account → Theme → Finishing) for first-time setup.
       - Supports `Escape` (back/abort) and `Enter` (next) navigation.
       - Creates user via `createUser()`, initializes home directory, sets system creation timestamp.

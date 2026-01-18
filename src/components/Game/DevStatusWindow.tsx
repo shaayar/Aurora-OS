@@ -41,9 +41,9 @@ export function DevStatusWindow({ className }: DevStatusWindowProps) {
                 </div>
 
                 <div className="space-y-2 text-center">
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-white underline decoration-white/30">Developer Build</h3>
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-white decoration-white/30">Developer Build</h3>
                     <p className="text-[10px] text-white/60 leading-relaxed">
-                        This is an experimental version, still work in progress. Bugs, incomplete systems, and visual inconsistencies/artifacts are expected.
+                        This is an experimental version, still work in progress. Bugs, incomplete systems, and visual inconsistencies are expected.
                     </p>
                 </div>
 
@@ -60,7 +60,7 @@ export function DevStatusWindow({ className }: DevStatusWindowProps) {
                         Join Discord
                     </a>
                     <a
-                        href="https://github.com/mental-os/Aurora-OS.js"
+                        href={pkg.homepage}
                         target="_blank"
                         rel="noreferrer"
                         onClick={() => feedback.click()}
@@ -73,8 +73,8 @@ export function DevStatusWindow({ className }: DevStatusWindowProps) {
             </div>
 
             {/* Footer */}
-            <div className="p-1 px-3 border-t border-white/20 bg-zinc-950 text-[8px] text-white/40 uppercase tracking-[0.2em] flex justify-between">
-                <span>VER: {pkg.version}</span>
+            <div className="p-3 px-4 border-t border-white/20 bg-zinc-950 text-[8px] text-white/40 uppercase tracking-[0.2em] flex justify-between">
+                <span>v{pkg.version}</span>
                 <span>SYSTEM_READY</span>
             </div>
         </motion.div>

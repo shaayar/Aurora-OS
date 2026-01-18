@@ -15,23 +15,26 @@ import computerStartSound from '../assets/sounds/computerStart.mp3';
 import biosStartSound from '../assets/sounds/biosStart.mp3';
 
 const SOUNDS = {
-    // System
-    success: successSound,
-    warning: warningSound,
-    error: errorSound,
+
+    // Startup Sounds (Global / Game)
     computerStart: computerStartSound,
     biosStart: biosStartSound,
 
-    // UI
+    // System Sounds (Notifications)
+    success: successSound,
+    warning: warningSound,
+    error: errorSound,
+
+    // UI Sounds (Interactions)
     folder: folderSound,
     'window-open': windowOpenSound,
     'window-close': windowCloseSound,
 
-    // Feedback
-    click: clickSound,
+    // Feedback Sounds (User Interactions)
+    click: clickSound, //for testing
     hover: hoverSound,
 
-    // Ambiance
+    // Ambiance (Atmospheric)
     ambiance: ambianceSound,
 };
 

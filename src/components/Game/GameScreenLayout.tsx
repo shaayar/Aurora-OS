@@ -281,9 +281,8 @@ export function GameScreenLayout({
                         <div className={`flex items-center justify-center ${mode === 'glass' ? 'gap-2 md:gap-4 text-[10px] md:text-xs font-mono text-white/50' : 'gap-2 text-white/20'}`}>
                             {footerActions || (
                                 <>
-                                    <span>v{pkg.version}</span>
-                                    <span>•</span>
-                                    <span>Nova Republika IS</span>
+                                    <span>©2025 <a href={pkg.homepage} target="_blank" rel="noreferrer" className="hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">{pkg.build.productName} {pkg.version}</a> // <a href="https://instagram.com/mental.os" target="_blank" rel="noreferrer" className="hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">mental.os()</a> // <a href="https://facebook.com/dopepxls" target="_blank" rel="noreferrer" className="hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">Dope Pixels</a><br/>
+                                    Open-source (<a href="https://github.com/mental-os/Aurora-OS.js/blob/main/LICENSE" target="_blank" rel="noreferrer" className="hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">{pkg.license}</a>) · All rights reserved beyond license terms</span>
                                 </>
                             )}
                         </div>

@@ -445,7 +445,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                 </div>
 
                 {/* Footer */}
-                <div className="p-2 border-t border-white bg-black text-center text-[10px] text-white/40 font-mono uppercase tracking-widest flex justify-between px-4">
+                <div className="p-3 border-t border-white bg-black text-center text-[10px] text-white/40 font-mono uppercase tracking-widest flex justify-between px-4">
                     <span>{pkg.build.productName} v{pkg.version}</span>
                     <span>{activeTab.toUpperCase()} CONFIG</span>
                 </div>
