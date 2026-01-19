@@ -40,27 +40,10 @@ const CREDITS_DATA: ContributorCategory[] = [
                 github: "https://github.com/mental-os",
                 description: "Concept, architecture, design, narrative direction",
                 socials: [
-                    { label: "IG/mental.os", url: "https://www.instagram.com/mental.os" }
+                    { label: "IG/mental.os", url: "https://www.instagram.com/mental.os" },
+                    { label: "LI/dragoiurobert", url: "https://www.linkedin.com/in/dragoiurobert" },
                 ]
             }
-        ]
-    },
-    {
-        id: 'community',
-        title: "Community",
-        icon: Wrench,
-        type: 'people',
-        contributors: [
-            { name: "Oklyne", role: "Code, Translation, Testing", github: "https://github.com/oklyne" },
-            { name: "dannie203", role: "Code, Translation, Testing", github: "https://github.com/dannie203" },
-            {
-                name: "nirgranthi",
-                role: "Code",
-                github: "https://github.com/nirgranthi",
-                socials: [{ label: "IG/s.a.u.r.a.b_", url: "https://www.instagram.com/s.a.u.r.a.b_" }]
-            },
-            { name: "masterofmagic999", role: "Code, Testing", github: "https://github.com/masterofmagic999" },
-            { name: "Marcx5", role: "Code", github: "https://github.com/Marcx5" }
         ]
     },
     {
@@ -92,6 +75,26 @@ const CREDITS_DATA: ContributorCategory[] = [
         content: "People who helped shape Aurora-OS.js in its early experimental phase — through feedback, discussion, or belief."
     },
     {
+        id: 'community',
+        title: "Community",
+        icon: Wrench,
+        type: 'people',
+        contributors: [
+            { name: "Oklyne", role: "Code, Translation, Testing", github: "https://github.com/oklyne" },
+            { name: "dannie203", role: "Code, Translation, Testing", github: "https://github.com/dannie203" },
+            {
+                name: "nirgranthi",
+                role: "Code",
+                github: "https://github.com/nirgranthi",
+                socials: [{ label: "IG/s.a.u.r.a.b_", url: "https://www.instagram.com/s.a.u.r.a.b_" }]
+            },
+            { name: "masterofmagic999", role: "Code, Testing", github: "https://github.com/masterofmagic999" },
+            { name: "Marcx5", role: "Code", github: "https://github.com/Marcx5" },
+            { name: "0xGP // gaupoit", role: "Code", github: "https://github.com/gaupoit", socials: [{ label: "Website", url: "https://www.instagram.com/0xgp" }] },
+            { name: "मृत्यु // mriityu", role: "Code, Testing", github: "https://github.com/mriityu" },
+        ]
+    },
+    {
         id: 'special',
         title: "Special Thanks",
         icon: Sparkles,
@@ -109,6 +112,9 @@ const CREDITS_DATA: ContributorCategory[] = [
                 <a href="https://github.com/eriksvedang" target="_blank" rel="noreferrer" className="text-white hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">Erik Svedäng</a> of{" "}
                 <a href="https://store.steampowered.com/app/400110/Else_HeartBreak/" target="_blank" rel="noreferrer" className="text-white hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">Else Heart.Break()</a>,
                 and many others for inspiring me to create {pkg.build.productName}, and for keeping the genre alive with inspiring work and innovation.
+                <br />
+                <br />
+                MOONHOUND Studio for incubation, sponsorship and guidance.
             </div>
         )
     },
@@ -386,7 +392,7 @@ export function CreditsModal({ onClose }: CreditsModalProps) {
                 {/* Footer */}
                 <div className="p-3 border-t border-white bg-black text-[10px] text-white/40 font-mono tracking-widest flex justify-between items-start px-4">
                     <span className="text-left text-[10px] leading-tight">
-                        <span className="uppercase">©2025 <a href={pkg.homepage} target="_blank" rel="noreferrer" className="text-white hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">{pkg.build.productName}</a> // <a href="https://instagram.com/mental.os" target="_blank" rel="noreferrer" className="text-white hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">mental.os()</a> // <a href="https://facebook.com/dopepxls" target="_blank" rel="noreferrer" className="text-white hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">Dope Pixels</a></span><br/>
+                        <span className="uppercase">©2025 <a href={pkg.homepage} target="_blank" rel="noreferrer" className="text-white hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">{pkg.build.productName}</a> // <a href="https://instagram.com/mental.os" target="_blank" rel="noreferrer" className="text-white hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">mental.os()</a> // <a href="https://facebook.com/dopepxls" target="_blank" rel="noreferrer" className="text-white hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">Dope Pixels</a> // MOONHOUND Studio</span><br/>
                         {pkg.build.productName} and its original concepts, architecture, and visual identity are protected by copyright.<br/>
                         Source code is licensed under {pkg.license}. See <a href="https://github.com/mental-os/Aurora-OS.js/blob/main/LICENSE" target="_blank" rel="noreferrer" className="text-white hover:text-(--accent-user) decoration-white/30 hover:decoration-(--accent-user)">LICENSE</a> for details.
                     </span>
