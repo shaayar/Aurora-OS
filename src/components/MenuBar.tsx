@@ -46,6 +46,9 @@ function MenuBarComponent({ focusedApp, onOpenApp }: MenuBarProps) {
   const clickCountRef = useRef(0);
   const lastClickTimeRef = useRef(0);
 
+  // Panic Confirmation State
+  const [panicConfirm, setPanicConfirm] = useState(false);
+
   // Fullscreen management
   const { toggleFullscreen: toggleFullscreenBase } = useFullscreen();
 
@@ -318,15 +321,32 @@ function MenuBarComponent({ focusedApp, onOpenApp }: MenuBarProps) {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <MenubarItem
-                    onClick={() => {
-                      // Hard Reset -> PANIC
-                      hardReset();
-                      window.location.reload();
+                    onSelect={(e) => {
+                      if (!panicConfirm) {
+                        e.preventDefault();
+                      }
                     }}
-                    className="text-red-500 focus:text-red-500 focus:bg-red-500/10"
+                    onClick={() => {
+                      if (!panicConfirm) {
+                        setPanicConfirm(true);
+                        setTimeout(() => setPanicConfirm(false), 3000);
+                      } else {
+                        // Hard Reset -> PANIC
+                        hardReset();
+                        window.location.reload();
+                      }
+                    }}
+                    className={cn(
+                      "text-red-500 focus:text-red-500 focus:bg-red-500/10",
+                      panicConfirm && "bg-red-500/10"
+                    )}
                   >
-                    <span className="flex-1 text-left">{t('menubar.system.panic')}</span>
-                    <Badge variant="destructive" className="ml-auto text-[10px] h-5 px-1.5">{t('menubar.system.hardReset')}</Badge>
+                    <span className="flex-1 text-left">
+                      {panicConfirm ? "Are you sure?" : t('menubar.system.panic')}
+                    </span>
+                    <Badge variant="destructive" className="ml-auto text-[10px] h-5 px-1.5">
+                      {panicConfirm ? "CONFIRM" : t('menubar.system.hardReset')}
+                    </Badge>
                   </MenubarItem>
                 </TooltipTrigger>
                 <TooltipContent side="right" sideOffset={10}>
