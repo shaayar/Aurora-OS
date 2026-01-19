@@ -409,7 +409,7 @@ export default function OS() {
             {windows.map(window => {
                 const contentWithProps = isValidElement(window.content)
                     ? cloneElement(window.content as React.ReactElement, {
-                        // @ts-ignore - Dynamic prop injection
+                        // @ts-expect-error - Intentionally ignored for now - Dynamic prop injection
                         onClose: () => closeWindow(window.id)
                     })
                     : window.content;
