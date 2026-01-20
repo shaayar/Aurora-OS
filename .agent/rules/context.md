@@ -19,6 +19,7 @@ trigger: always_on
 **Core**: React 19, TypeScript, Vite, Tailwind CSS (v4), Radix UI.
 **Platform**: Web (PWA) + Desktop (Electron).
 **State**: React Context + `localStorage` persistence (Hierarchical: System Defaults + User Overrides).
+**Config**: `src/config/systemConfig.ts` defines core limits (e.g., Default RAM).
 
 </tech_stack>
 
@@ -42,6 +43,7 @@ trigger: always_on
     - **ContextMenu**: Can be global (registry `contextMenu`) or localized (wrapping specific UI areas with `ContextMenuTrigger` in the app component).
     - **Persistence**: Per-app storage via `useAppStorage` (key: `app-user`) or manual `localStorage` with `getAppStateKey`.
     - **Installer**: `useAppInstaller` hook handles install/uninstall/restore with permission checks.
+    - **Launch Gates**: `useWindowManager` prevents app launch if `currentRamUsage + app.ramUsage > totalMemoryGB` (Default: 2GB).
     - **Config**: Simulation apps (Mail, Messages) use `~/.Config/<app>.json` for encrypted credentials, enabling "hacking" gameplay mechanisms.
 
 4.  **Terminal Architecture**:
@@ -126,18 +128,19 @@ trigger: always_on
 
 <codebase_map>
 
-| Path                                   | Component         | Description                                              |
-| :------------------------------------- | :---------------- | :------------------------------------------------------- |
-| `src/components/FileSystemContext.tsx` | **VFS Core**      | Context for all FS operations.                           |
-| `src/utils/fileSystemUtils.ts`         | **VFS Utils**     | `FileNode` types, `initialFileSystem`, permission logic. |
-| `src/components/AppContext.tsx`        | **Session**       | Theme, Wallpapers, Physical User session.                |
-| `src/config/appRegistry.ts`            | **Registry**      | Installed Apps configuration.                            |
-| `src/services/notifications.tsx`       | **Notifications** | Central service for rich system toasts.                  |
-| `src/services/sound.ts`                | **Sound Manager** | Global audio state and Howler integration.               |
-| `src/utils/id3Parser.ts`               | **ID3 Parser**    | Binary metadata extractor for MP3 files.                 |
-| `src/components/apps/*`                | **Apps**          | Individual App components (Notepad, Terminal, etc).      |
-| `src/hooks/useAppInstaller.ts`         | **Installer**     | Hook for app install/uninstall/restore logic.            |
-| `src/components/apps/AppStore/`        | **App Store**     | App Store components (AppCard, etc).                     |
+| Path                                   | Component          | Description                                              |
+| :------------------------------------- | :----------------- | :------------------------------------------------------- |
+| `src/components/FileSystemContext.tsx` | **VFS Core**       | Context for all FS operations.                           |
+| `src/utils/fileSystemUtils.ts`         | **VFS Utils**      | `FileNode` types, `initialFileSystem`, permission logic. |
+| `src/components/AppContext.tsx`        | **Session**        | Theme, Wallpapers, Physical User session.                |
+| `src/config/appRegistry.ts`            | **Registry**       | Installed Apps configuration.                            |
+| `src/services/notifications.tsx`       | **Notifications**  | Central service for rich system toasts.                  |
+| `src/services/sound.ts`                | **Sound Manager**  | Global audio state and Howler integration.               |
+| `src/utils/id3Parser.ts`               | **ID3 Parser**     | Binary metadata extractor for MP3 files.                 |
+| `src/components/apps/*`                | **Apps**           | Individual App components (Notepad, Terminal, etc).      |
+| `src/hooks/useAppInstaller.ts`         | **Installer**      | Hook for app install/uninstall/restore logic.            |
+| `src/components/apps/AppStore/`        | **App Store**      | App Store components (AppCard, etc).                     |
+| `src/hooks/useWindowManager.ts`        | **Window Manager** | Handles window state and memory usage gates.             |
 
 </codebase_map>
 

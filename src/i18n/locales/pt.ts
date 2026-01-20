@@ -253,6 +253,10 @@ export const pt: TranslationDict = {
       "mainWindow": "Janela Principal",
       "extraWindow": "Janela Adicional",
       "extraTabs": "{{count}} Abas Extras"
+    },
+    "error": {
+      "title": "Memória Insuficiente",
+      "description": "Não é possível abrir {{appName}}. RAM insuficiente."
     }
   },
   "appStore": {

@@ -253,6 +253,10 @@ export const fr: TranslationDict = {
       "mainWindow": "Fenêtre principale",
       "extraWindow": "Fenêtre supplémentaire",
       "extraTabs": "{{count}} onglets suppl."
+    },
+    "error": {
+      "title": "Mémoire Insuffisante",
+      "description": "Impossible d'ouvrir {{appName}}. Pas assez de mémoire RAM disponible."
     }
   },
   "appStore": {

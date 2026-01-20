@@ -253,6 +253,10 @@ export const ru: TranslationDict = {
       "mainWindow": "Главное окно",
       "extraWindow": "Дополнительное окно",
       "extraTabs": "{{count}} дополнительных вкладок"
+    },
+    "error": {
+      "title": "Недостаточно памяти",
+      "description": "Не удалось открыть {{appName}}. Недостаточно оперативной памяти."
     }
   },
   "appStore": {

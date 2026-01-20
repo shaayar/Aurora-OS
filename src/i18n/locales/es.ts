@@ -253,6 +253,10 @@ export const es: TranslationDict = {
       "mainWindow": "Ventana Principal",
       "extraWindow": "Ventana Adicional",
       "extraTabs": "{{count}} Pestañas Extra"
+    },
+    "error": {
+      "title": "Memoria Insuficiente",
+      "description": "No se puede abrir {{appName}}. No hay suficiente RAM disponible."
     }
   },
   "appStore": {

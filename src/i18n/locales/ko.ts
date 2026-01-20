@@ -253,6 +253,10 @@ export const ko: TranslationDict = {
       "mainWindow": "메인 창",
       "extraWindow": "추가 창",
       "extraTabs": "{{count}}개의 추가 탭"
+    },
+    "error": {
+      "title": "메모리 부족",
+      "description": "{{appName}}을(를) 열 수 없습니다. 사용 가능한 RAM이 부족합니다."
     }
   },
   "appStore": {

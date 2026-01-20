@@ -3,6 +3,9 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { STORAGE_KEYS } from '../utils/memory';
 import { feedback } from '../services/soundFeedback';
 import { notify } from '../services/notifications';
+import { getApp } from '../config/appRegistry';
+import { calculateTotalRamUsage } from '../utils/resourceMonitor';
+import { useI18n } from '@/i18n';
 
 export interface WindowState {
     id: string;
@@ -33,11 +36,13 @@ export interface WindowSession {
 
 export function useWindowManager(
     activeUser: string | null,
-    getAppContent: (type: string, data?: any, owner?: string) => { content: React.ReactNode; title: string }
+    getAppContent: (type: string, data?: any, owner?: string) => { content: React.ReactNode; title: string },
+    totalMemoryGB: number
 ) {
     const [windows, setWindows] = useState<WindowState[]>([]);
     const [isRestoring, setIsRestoring] = useState(true);
     const topZIndexRef = useRef(100);
+    const { t } = useI18n();
 
     // Load windows on mount / user change
     useEffect(() => {
@@ -98,6 +103,40 @@ export function useWindowManager(
     const openWindow = useCallback(
         (type: string, data?: { path?: string; timestamp?: number; [key: string]: any }, owner?: string) => {
             const MULTI_INSTANCE_APPS = ['finder', 'terminal', 'browser'];
+            const windowOwner = owner || activeUser || 'guest';
+            
+            // --- Memory Check ---
+            const app = getApp(type);
+            if (app && app.ramUsage) {
+                // 1. Calculate potential cost
+                // We need to know if we are opening a "Main" or "Extra" window.
+                // Since 'setWindows' is async, we can't easily peek at the "future" state inside the check if we rely on 'windows' dependency.
+                // However, we can approximate by looking at 'windows' state from closure IF we add it to dependency, 
+                // OR we can trust localStorage + simple heuristic.
+                // Let's rely on localStorage via calculateTotalRamUsage for the *Base* state, 
+                // but we also need to know if *this specific app* is already open for *this specific user* to determine strict cost.
+                
+                // We'll read the current usage
+                const currentReport = calculateTotalRamUsage(activeUser || 'guest'); // Using activeUser for context
+                const usedMB = currentReport.totalMB;
+                
+                // Determine cost: Check if this app type is already in the current *windows state* 
+                // We unfortunately don't have access to the *pending* state update here easily without 'windows' dependency.
+                // But we can check 'windows' from the outer scope if we add it to deps.
+                // Let's assume we use the state 'windows'.
+                const isAppAlreadyOpen = windows.some(w => w.type === type && w.owner === windowOwner);
+                const weight = windowOwner === activeUser ? 1.0 : 0.5;
+                const cost = isAppAlreadyOpen 
+                    ? (app.ramUsage / 2) * weight // Extra Window
+                    : app.ramUsage * weight;      // Main Window
+                
+                const totalMemoryMB = totalMemoryGB * 1024;
+
+                if (usedMB + cost > totalMemoryMB) {
+                    notify.system('error', t('memory.error.title'), t('memory.error.description', { appName: app.name }));
+                    return; // PREVENT LAUNCH
+                }
+            }
 
             setWindows((prevWindows) => {
                 // Check for existing instance if not multi-instance
@@ -123,7 +162,6 @@ export function useWindowManager(
                 }
 
                 feedback.windowOpen();
-                const windowOwner = owner || activeUser || 'guest';
                 const { content, title } = getAppContent(type, data, windowOwner);
 
                 topZIndexRef.current += 1;
@@ -176,7 +214,7 @@ export function useWindowManager(
                 return [...prevWindows, newWindow];
             });
         },
-        [getAppContent, activeUser]
+        [getAppContent, activeUser, windows, totalMemoryGB, t]
     );
 
     const closeWindow = useCallback((id: string) => {

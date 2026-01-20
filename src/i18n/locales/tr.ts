@@ -253,6 +253,10 @@ export const tr: TranslationDict = {
       "mainWindow": "Ana Pencere",
       "extraWindow": "Ekstra Pencere",
       "extraTabs": "{{count}} Ekstra Sekme"
+    },
+    "error": {
+      "title": "Yetersiz Bellek",
+      "description": "{{appName}} açılamıyor. Yeterli RAM yok."
     }
   },
   "appStore": {

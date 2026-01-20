@@ -253,6 +253,10 @@ export const ro: TranslationDict = {
       "mainWindow": "Fereastră Principală",
       "extraWindow": "Fereastră Extra",
       "extraTabs": "{{count}} Tab-uri Extra"
+    },
+    "error": {
+      "title": "Memorie Insuficientă",
+      "description": "Nu se poate deschide {{appName}}. Nu este suficientă memorie RAM."
     }
   },
   "appStore": {

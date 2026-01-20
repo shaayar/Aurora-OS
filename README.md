@@ -127,6 +127,7 @@ Or use the [GitHub Pages](https://mental-os.github.io/Aurora-OS.js) (LIVE DEMO)
 - **Notifications Applet**: Added initial support for app notifications and HeadsUp notifications (implemented in the Messages app).
 - **App Store**: Uninstall confirmation and window closing block event if an app is still installing.
 - **DevCenter - Messages Debugger**: New debugging interface for Messages app with account creation, registry management, and message sending tools.
+- **Memory Management**: New configurable System Memory (default 2GB) with dynamic App Launch Gates that prevent opening apps when RAM is insufficient.
 
 ### Removed
 

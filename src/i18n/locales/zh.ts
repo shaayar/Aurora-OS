@@ -253,6 +253,10 @@ export const zh: TranslationDict = {
       "mainWindow": "主窗口",
       "extraWindow": "额外窗口",
       "extraTabs": "{{count}} 个额外标签页"
+    },
+    "error": {
+      "title": "内存不足",
+      "description": "无法打开 {{appName}}。可用内存不足。"
     }
   },
   "appStore": {

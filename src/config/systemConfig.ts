@@ -1,0 +1,1 @@
+export const DEFAULT_SYSTEM_MEMORY_GB = 2;

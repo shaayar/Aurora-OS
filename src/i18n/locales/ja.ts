@@ -253,6 +253,10 @@ export const ja: TranslationDict = {
       "mainWindow": "メインウィンドウ",
       "extraWindow": "追加ウィンドウ",
       "extraTabs": "{{count}} 追加タブ"
+    },
+    "error": {
+      "title": "メモリ不足",
+      "description": "{{appName}}を開けません。利用可能なRAMが不足しています。"
     }
   },
   "appStore": {

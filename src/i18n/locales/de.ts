@@ -253,6 +253,10 @@ export const de: TranslationDict = {
       "mainWindow": "Hauptfenster",
       "extraWindow": "Zusatzfenster",
       "extraTabs": "{{count}} weitere Tabs"
+    },
+    "error": {
+      "title": "Unzureichender Speicher",
+      "description": "{{appName}} kann nicht geöffnet werden. Nicht genügend RAM verfügbar."
     }
   },
   "appStore": {

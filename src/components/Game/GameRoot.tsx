@@ -22,7 +22,7 @@ type GameState = 'INTRO' | 'MENU' | 'FIRST_BOOT' | 'BOOT' | 'ONBOARDING' | 'GAME
 export function GameRoot({ children }: GameRootProps) {
     const [gameState, setGameState] = useState<GameState>('INTRO'); // Default to INTRO
     const { resetFileSystem } = useFileSystem();
-    const { setIsLocked } = useAppContext();
+    const { setIsLocked, resetSystemConfig } = useAppContext();
 
     // Global click sound (Persistent across all game states: Menu, Intro, Desktop, etc.)
     useEffect(() => {
@@ -42,6 +42,7 @@ export function GameRoot({ children }: GameRootProps) {
         // hardReset() is now handled internally by resetFileSystem()
         // which resets both localStorage and in-memory React state
         resetFileSystem(true);
+        resetSystemConfig();
 
         setIsLocked(false);
         setGameState('FIRST_BOOT');

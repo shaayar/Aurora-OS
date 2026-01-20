@@ -237,7 +237,7 @@ export default function OS() {
         maximizeWindow,
         focusWindow,
         updateWindowState
-    } = useWindowManager(activeUser, getAppContent);
+    } = useWindowManager(activeUser, getAppContent, useAppContext().totalMemoryGB);
 
     useEffect(() => {
         openWindowRef.current = openWindow;

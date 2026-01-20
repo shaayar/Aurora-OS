@@ -273,6 +273,10 @@ export const en: TranslationDict = {
       extraWindow: 'Extra Window',
       extraTabs: '{{count}} Extra Tabs',
     },
+    error: {
+      title: 'Insufficient Memory',
+      description: 'Cannot open {{appName}}. Not enough available RAM.',
+    },
   },
   appStore: {
     menu: {
