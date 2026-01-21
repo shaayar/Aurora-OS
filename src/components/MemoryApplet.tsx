@@ -18,11 +18,13 @@ interface ProcessItem {
     count?: number;
 }
 
-const TOTAL_MEMORY_GB = 2;
-const TOTAL_MEMORY_MB = TOTAL_MEMORY_GB * 1024;
+// Removed local constant TOTAL_MEMORY_GB in favor of context
+// const TOTAL_MEMORY_GB = 2;
+// const TOTAL_MEMORY_MB = TOTAL_MEMORY_GB * 1024;
 
 export function MemoryApplet() {
-    const { disableShadows, reduceMotion, accentColor } = useAppContext();
+    const { disableShadows, reduceMotion, accentColor, totalMemoryGB } = useAppContext();
+    const totalMemoryMB = totalMemoryGB * 1024;
 
     const { blurStyle, getBackgroundColor } = useThemeColors();
     const { currentUser } = useFileSystem();
@@ -131,7 +133,7 @@ export function MemoryApplet() {
         });
 
         const usedMB = report.totalMB;
-        const percentage = (usedMB / TOTAL_MEMORY_MB) * 100;
+        const percentage = (usedMB / totalMemoryMB) * 100;
 
         return {
             processes: processList,
@@ -139,7 +141,7 @@ export function MemoryApplet() {
             wiredMB: totalWired, 
             appMB: totalApp
         };
-    }, [report, currentUser, t]);
+    }, [report, currentUser, t, totalMemoryMB]);
     // ... helper functions ... (omitted for brevity in replacement if possible, but replace block needs context)
     // Visual Helpers
     const getPressureColor = (p: number) => {
@@ -205,7 +207,7 @@ export function MemoryApplet() {
                             <Database className="w-4 h-4 text-white/70" />
                             {t('memory.title')}
                         </span>
-                        <span className="text-xs text-white/50">{TOTAL_MEMORY_GB} GB DDR5</span>
+                        <span className="text-xs text-white/50">{totalMemoryGB} GB DDR5</span>
                     </div>
 
                     {/* Hero Stats */}

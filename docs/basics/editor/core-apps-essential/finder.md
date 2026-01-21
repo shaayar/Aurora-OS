@@ -20,10 +20,10 @@ Supports path arguments. Eg. `finder ~/Desktop` or `finder home/guest`
 
 <summary>Memory &#x26; Specs</summary>
 
-Saves opened path, selected tab, windows number and placement, in `soft memory` to be available while the user session is still active (not logged out).
+Saves opened path, selected tab, windows number and placement in `soft memory` to be available while the user session is still active (not logged out).
 
-* App Size: x Mb
-* RAM Usage: x Mb (main window), x Mb (additional window), stacks per. user session&#x20;
+* App Size: 50 Mb
+* RAM Usage: 110 Mb (main window), 55 Mb (additional window), stacks per. user session&#x20;
 * Requires internet: no
 
 </details>
